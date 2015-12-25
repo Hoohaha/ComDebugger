@@ -1,0 +1,57 @@
+﻿<Window x:Class="COM_DEBUGGER.OptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Options" Height="400" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Background="#FF3896D4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="127*"/>
+            <ColumnDefinition Width="180*"/>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="26*"/>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="21*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.ColumnSpan="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37*"/>
+                <RowDefinition Height="56*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Margin="0" VerticalAlignment="Center" Grid.Row="1">
+                <Label x:Name="Label1" Content="Python Path" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Height="16" Width="127" Foreground="White"/>
+                <TextBox x:Name="path1" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center" Height="30" VerticalContentAlignment="Center" LostFocus="Path_Judge_Event" Width="345"/>
+            </WrapPanel>
+            <TextBlock x:Name="Notice1" HorizontalAlignment="Left" Margin="132,0,0,44" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="338" Height="21" Grid.RowSpan="2" />
+        </Grid>
+        <Button x:Name="Save_button" Content="Save" Grid.Column="2" Margin="0,0,0,45" Grid.Row="3" VerticalAlignment="Bottom" Click="Save_button_Click" Height="30"/>
+        <Button x:Name="Cancle_button" Content="Cancle" Grid.Column="4" Margin="0,0,0,45" Grid.Row="3" VerticalAlignment="Bottom" Click="Cancle_button_Click" Height="30"/>
+        <Grid Grid.ColumnSpan="6" Grid.Row="1" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37*"/>
+                <RowDefinition Height="56*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Margin="0" VerticalAlignment="Center" Grid.Row="1">
+                <Label x:Name="Label2" Content="Python Lib 1" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Height="16" Width="127" Foreground="White"/>
+                <TextBox x:Name="path2" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center" Height="30" VerticalContentAlignment="Center" LostFocus="Path_Judge_Event" Width="345"/>
+            </WrapPanel>
+            <TextBlock x:Name="Notice2" HorizontalAlignment="Left" Margin="132,0,0,30" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="338" Height="26" Grid.RowSpan="2" />
+        </Grid>
+        <Grid Grid.ColumnSpan="6" Grid.Row="2" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37*"/>
+                <RowDefinition Height="56*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Margin="0" VerticalAlignment="Center" Grid.Row="1">
+                <Label x:Name="Label3" Content="Python Lib 2" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Height="16" Width="127" Foreground="White"/>
+                <TextBox x:Name="path3" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center" Height="30" VerticalContentAlignment="Center" LostFocus="Path_Judge_Event" Width="345"/>
+            </WrapPanel>
+            <TextBlock x:Name="Notice3" HorizontalAlignment="Left" Margin="132,0,0,30" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="338" Height="26" Grid.RowSpan="2" />
+        </Grid>
+
+    </Grid>
+</Window>
