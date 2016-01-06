@@ -8,14 +8,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Com Debugger.exe.manifest" size="7632">
+    <dependentAssembly dependencyType="install" codebase="Com Debugger.exe.manifest" size="6925">
       <assemblyIdentity name="Com Debugger.exe" version="3.0.0.13" publicKeyToken="0000000000000000" language="en" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>Ai1d7qyOhUBrbKqkdlitesPsC2w=</dsig:DigestValue>
+        <dsig:DigestValue>ZhWj1dxWtvigCMIDu5/M8Vd+sIM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

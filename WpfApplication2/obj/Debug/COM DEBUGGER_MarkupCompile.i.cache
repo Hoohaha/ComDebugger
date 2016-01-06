@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-E:\KDT\WpfApplication2\obj\Debug\
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\
 COM_DEBUGGER
 none
 false
 DEBUG;TRACE
-E:\KDT\WpfApplication2\App.xaml
+C:\SourceCode\ComDebugger\WpfApplication2\App.xaml
 31699894113
 1631132479
 81501721719
-19-688135165
+14-1548991731
 About.xaml;MainWindow.xaml;OptionWindow.xaml;
 
 False

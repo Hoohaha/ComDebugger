@@ -3,21 +3,15 @@ using System.Text;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
 using System.Threading;
-
+using System.IO;
 using System.IO.Ports;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
-//using IronPython.Modules;
 using Microsoft.Win32;
-using System.IO;
+using System.Collections.ObjectModel;
 
 
 namespace COM_DEBUGGER
@@ -40,6 +34,8 @@ namespace COM_DEBUGGER
         private Thread ScriptsThread;
         private string FilePath = string.Empty;
         private string VirtualPort = "Virtual Port";
+        private bool FirstConfig = true;
+        private ObservableCollection<FileItem> ScriptsSource = new ObservableCollection<FileItem>();
 
         delegate void HanderInterfaceUpdataDelegate();
         private HanderInterfaceUpdataDelegate ToolBoxHandle;
@@ -47,11 +43,16 @@ namespace COM_DEBUGGER
         public MainWindow()
         {
             InitializeComponent();
+
             sp1 = new Serial(getData1);
             sp2 = new Serial(getData2);
+
             initial_combobox();
-            addPortNames(comboBox_Ports1, comboBox_Ports2);
+            //ScriptsList.ItemsSource = ScriptsSource;
+
             LoadCommandList();
+            addPortNames(comboBox_Ports1, comboBox_Ports2);
+            ScriptsList.ItemsSource = ScriptsSource;
         }
 
 
@@ -62,9 +63,17 @@ namespace COM_DEBUGGER
             // use registry info to get com info
             RegistryKey hklm = Registry.LocalMachine;
             RegistryKey hs = hklm.OpenSubKey(@"HARDWARE\DEVICEMAP\SERIALCOMM");
-            for (int i = 0; i < hs.ValueCount; i++)
+            //int ccc = hs.ValueCount;
+            try
             {
-                result.Add(hs.GetValue(hs.GetValueNames()[i]).ToString());
+                for (int i = 0; i < hs.ValueCount; i++)
+                {
+                    result.Add(hs.GetValue(hs.GetValueNames()[i]).ToString());
+                }
+            }
+            catch(Exception ex)
+            {
+               // MessageBox.Show(ex.Message);
             }
             hklm.Close();
             return result;
@@ -81,12 +90,17 @@ namespace COM_DEBUGGER
 
             cbox1.Items.Add(VirtualPort);
             cbox2.Items.Add(VirtualPort);
-            
+
             foreach (string s in serialPorts)
             {
                 cbox1.Items.Add(s);
                 cbox2.Items.Add(s);
                 PortListBox.Items.Add(s);
+            }
+            if(PortListBox.Items.Count==0)
+            {
+                cbox1.SelectedIndex = 0;
+                cbox2.SelectedIndex = 0;
             }
             cbox1.SelectedIndex = 1;
             cbox2.SelectedIndex = 2;
@@ -98,12 +112,14 @@ namespace COM_DEBUGGER
             List<int> baudrate_collection = new List<int>{2400, 4800, 9600, 19200, 38400, 57600, 115200};
             List<int> databits_collection = new List<int> { 5, 6, 7, 8 };
             List<string> stopbits_collection = new List<string> { "1", "1.5", "2"};
+            string[] ParityItemSource = System.Enum.GetNames(typeof(Parity));
+            string[] HandShakeItemSource = System.Enum.GetNames(typeof(Handshake));
             //set items source
             comboBox_BaudRate1.ItemsSource = baudrate_collection;
             comboBox_Databits1.ItemsSource = databits_collection;
             comboBox_StopBits1.ItemsSource = stopbits_collection;
-            comboBox_HandShake1.ItemsSource = System.Enum.GetNames(typeof(Handshake));
-            comboBox_Parity1.ItemsSource = System.Enum.GetNames(typeof(Parity));
+            comboBox_HandShake1.ItemsSource = HandShakeItemSource;
+            comboBox_Parity1.ItemsSource = ParityItemSource;
             //init value
             comboBox_Databits1.SelectedItem = 8;
             comboBox_Parity1.SelectedItem = "None";
@@ -115,8 +131,8 @@ namespace COM_DEBUGGER
             comboBox_BaudRate2.ItemsSource = baudrate_collection;
             comboBox_Databits2.ItemsSource = databits_collection;
             comboBox_StopBits2.ItemsSource = stopbits_collection;
-            comboBox_HandShake2.ItemsSource = System.Enum.GetNames(typeof(Handshake));
-            comboBox_Parity2.ItemsSource = System.Enum.GetNames(typeof(Parity));
+            comboBox_HandShake2.ItemsSource = HandShakeItemSource;
+            comboBox_Parity2.ItemsSource = ParityItemSource;
             //init value
             comboBox_Databits2.SelectedItem = 8;
             comboBox_Parity2.SelectedItem = "None";
@@ -124,7 +140,7 @@ namespace COM_DEBUGGER
             comboBox_HandShake2.SelectedItem = "None";
             comboBox_Parity2.SelectedItem = "None";
             comboBox_BaudRate2.SelectedItem = 115200;
-
+            FirstConfig = false;
         }
         private void ClosePorts()
         {
@@ -311,11 +327,27 @@ namespace COM_DEBUGGER
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
                 String[] files = (String[])e.Data.GetData(DataFormats.FileDrop);
-                foreach (String s in files)
+
+                foreach (string s in files)
                 {
-                    (sender as ListBox).Items.Add(s);
+                    AddItemToScriptSource(s);
                 }
             }
+        }
+
+        private void ADDButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Python(*.py)|*.py|All files (*.*)|*.*";
+            if (dialog.ShowDialog() == true)
+            {
+                AddItemToScriptSource(dialog.FileName);
+            }
+        }
+
+        private void AddItemToScriptSource(string filepath)
+        {
+            ScriptsSource.Add(new FileItem(filepath));
         }
 
         private void RUNButton_Click(object sender, RoutedEventArgs e)
@@ -348,8 +380,7 @@ namespace COM_DEBUGGER
                    if (res != MessageBoxResult.Yes)
                        return;
                 }
-                
-                FilePath = (string)ScriptsList.SelectedItem;
+                FilePath = (string)ScriptsList.SelectedValue;
                 ScriptsThread = new Thread(exectue_py);
                 ScriptsThread.Start();
                 ScriptsList.IsEnabled = false;
@@ -376,11 +407,7 @@ namespace COM_DEBUGGER
             RUNButton.Content = "RUN";
             RUNButton.Background = colorwhite;
         }
-        private void time_delay(float t)
-        {
-            int i = (int)(t*1000);
-            Thread.Sleep(i);
-        }
+
         private void exectue_py()
         {
             ScriptsRuningState = true;
@@ -451,17 +478,17 @@ namespace COM_DEBUGGER
             switch (idx)
             {
                 case 0:
-                    return System.IO.Ports.Parity.None;
+                    return Parity.None;
                 case 1:
-                    return System.IO.Ports.Parity.Odd;
+                    return Parity.Odd;
                 case 2:
-                    return System.IO.Ports.Parity.Even;
+                    return Parity.Even;
                 case 3:
-                    return System.IO.Ports.Parity.Mark;
+                    return Parity.Mark;
                 case 4:
-                    return System.IO.Ports.Parity.Space;
+                    return Parity.Space;
                 default:
-                    return System.IO.Ports.Parity.None;
+                    return Parity.None;
             }
         }
 
@@ -472,13 +499,13 @@ namespace COM_DEBUGGER
             switch (idx)
             {
                 case 0:
-                    return System.IO.Ports.StopBits.One;
+                    return StopBits.One;
                 case 1:
-                    return System.IO.Ports.StopBits.OnePointFive;
+                    return StopBits.OnePointFive;
                 case 2:
-                    return System.IO.Ports.StopBits.Two;
+                    return StopBits.Two;
                 default:
-                    return System.IO.Ports.StopBits.One;
+                    return StopBits.One;
             }
         }
 
@@ -489,15 +516,15 @@ namespace COM_DEBUGGER
             switch (idx)
             {
                 case 0:
-                    return System.IO.Ports.Handshake.None;
+                    return Handshake.None;
                 case 1:
-                    return System.IO.Ports.Handshake.XOnXOff;
+                    return Handshake.XOnXOff;
                 case 2:
-                    return System.IO.Ports.Handshake.RequestToSend;
+                    return Handshake.RequestToSend;
                 case 3:
-                    return System.IO.Ports.Handshake.RequestToSendXOnXOff;
+                    return Handshake.RequestToSendXOnXOff;
                 default:
-                    return System.IO.Ports.Handshake.None;
+                    return Handshake.None;
             }
         }
 
@@ -523,11 +550,21 @@ namespace COM_DEBUGGER
             {
                 PortCfgInfo1.portname = cbox.SelectedItem.ToString();
                 Close_Serial1();
+
+                if (!FirstConfig)
+                {
+                    Op_Button1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
             }
             else
             {
                 PortCfgInfo2.portname = cbox.SelectedItem.ToString();
                 Close_Serial2();
+
+                if (!FirstConfig)
+                {
+                    Op_Button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
             }
         }
         //BaudRate
@@ -540,11 +577,21 @@ namespace COM_DEBUGGER
             {
                 PortCfgInfo1.baudrate = (int)cbox.SelectedItem;
                 Close_Serial1();
+
+                if (!FirstConfig)
+                {
+                    Op_Button1.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                }
             }
             else
             {
                 PortCfgInfo2.baudrate = (int)cbox.SelectedItem;
                 Close_Serial2();
+                if (!FirstConfig)
+                {
+                    Op_Button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
+                    
             }
         }
         //DataBits
@@ -603,14 +650,7 @@ namespace COM_DEBUGGER
             }
         }
 
-        private void ADDButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-            if (dialog.ShowDialog() == true)
-            {
-                ScriptsList.Items.Add(dialog.FileName);
-            }
-        }
+
         #endregion
 
         private void RefreshButton_Click_1(object sender, RoutedEventArgs e)
@@ -651,7 +691,7 @@ namespace COM_DEBUGGER
         {
             string text = "";
             ListBox commandlist = (ListBox)sender;
-            if (this.CPLDList.SelectedItem != null)
+            if (commandlist.SelectedItem != null)
             {
                 text = (string)commandlist.SelectedItem + "\r\n";
                 sp2.Send_Data(text);
@@ -683,7 +723,7 @@ namespace COM_DEBUGGER
             bool state = CheckReseult(checkbox);
             if (sp1 == null)
                 return;
-            if (checkbox==check1)
+            if (checkbox==NewLineCheck1)
             {
                 sp1.SendNewLineIsEnabled = state;
             }
@@ -700,7 +740,6 @@ namespace COM_DEBUGGER
                 return true;
             return false;
         }
-
 
     }
 
@@ -837,5 +876,31 @@ namespace COM_DEBUGGER
         }
     }
     #endregion
+
+    public class FileItem
+    {
+        private string _FileName;
+        private string _FilePath;
+        public FileItem(string path)
+        {
+            _FileName = path.Substring(path.LastIndexOf("\\") + 1);
+            _FilePath = path;
+        }
+        public string Name
+        {
+            get
+            {
+                return _FileName;
+            }
+        }
+        public string Path
+        {
+            get
+            {
+                return _FilePath;
+            }
+        }
+
+    }
 }
 

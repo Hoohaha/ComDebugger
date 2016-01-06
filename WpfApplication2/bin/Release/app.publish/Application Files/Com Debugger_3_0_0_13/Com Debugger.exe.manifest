@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="Com Debugger.exe" version="3.0.0.13" publicKeyToken="0000000000000000" language="en" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="Com Debugger.exe" version="3.0.0.13" publicKeyToken="d080fba1e9255996" language="en" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="logo.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -15,16 +15,16 @@
       </applicationRequestMinimum>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
         <!--
-          UAC Manifest Options
-          If you want to change the Windows User Account Control level replace the 
-          requestedExecutionLevel node with one of the following.
+          UAC 清单选项
+          如果要更改 Windows 用户帐户控制级别，请用以下节点之一替换
+          requestedExecutionLevel 节点。
 
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
 
-         If you want to utilize File and Registry Virtualization for backward 
-         compatibility then delete the requestedExecutionLevel node.
+          如果要利用文件和注册表虚拟化提供
+          向后兼容性，请删除 requestedExecutionLevel 节点。
     -->
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Com Debugger.exe" size="49056">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Com Debugger.exe" size="49568">
       <assemblyIdentity name="Com Debugger" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>UA6+BLrEyuedq+s7dZMApUeB+Tc=</dsig:DigestValue>
+        <dsig:DigestValue>2gdp5AVS/kTZiT3P/9zClDv7JrY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -129,4 +129,4 @@
       <dsig:DigestValue>uZahuM+3Viz9FVFAV+RMPpzN45I=</dsig:DigestValue>
     </hash>
   </file>
-</asmv1:assembly>
+<publisherIdentity name="CN=FSL\B51762" issuerKeyHash="add1e0dce6a1d6ff19ee0ce8c92aead5eb8843c0" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>Mq3tooTDFb0iBv18YcpOnhLRZ0k=</DigestValue></Reference></SignedInfo><SignatureValue>eriSHpjKbDUAYdDt57jNlOB2avv5Q+8an0/bV+PZXlEXFxJNa6bB3+hZW3GXmbO7hc7k9ZeLJPU4t9WqQRdT07DwNzYUHZGPKifWw5m1OY2BnoErPkS+te9O2AI7zvnWH0LCyW904512MYt+PxO3C+oy0f8uJgp0FiiUo3CVTho=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>yBhx30o4CFdCPRd6f8Q9m9B5gxvbO8KHnlQ6V0SgNldwVuiyLYFFvvYF1YhoZXtm0KWP5MDkCy5f7IPa90CrK6yFvu36YuskHKvhSDEpBiwfYYeFu5qoz01JQ3QeHOwMSiGRQKa5RZYE3Vmr3RXasFZqTzIemcHzr1nR/rBXDNE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="4967d1129e4eca617cfd0622bd15c384a2edad32" Description="" Url=""><as:assemblyIdentity name="Com Debugger.exe" version="3.0.0.13" publicKeyToken="d080fba1e9255996" language="en" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=FSL\B51762</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>fGhSTgT2uf5EWFKztTnHRy1ySyE=</DigestValue></Reference></SignedInfo><SignatureValue>Z/lxSng2HQoRGMQmciKVBrRGw5+tEa8dYLGG3HduX07bGcOasfi5dEwMiXoLoKlEtcUv8IeeUdA4y/RXCaHBbB7OdehsRpw2KCIiVuQMkDOEIdO4XzcrLPj53D6FZqP415LQR5tshwD5qtlpfD+gacPigfpglrqkglE4jqXaR4I=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>yBhx30o4CFdCPRd6f8Q9m9B5gxvbO8KHnlQ6V0SgNldwVuiyLYFFvvYF1YhoZXtm0KWP5MDkCy5f7IPa90CrK6yFvu36YuskHKvhSDEpBiwfYYeFu5qoz01JQ3QeHOwMSiGRQKa5RZYE3Vmr3RXasFZqTzIemcHzr1nR/rBXDNE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBwTCCASqgAwIBAgIQFEoy48Z6pYRGGloaolvNiDANBgkqhkiG9w0BAQsFADAfMR0wGwYDVQQDHhQARgBTAEwAXABCADUAMQA3ADYAMjAeFw0xNTEyMjAxMDIxMDlaFw0xNjEyMTkxNjIxMDlaMB8xHTAbBgNVBAMeFABGAFMATABcAEIANQAxADcANgAyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIGHHfSjgIV0I9F3p/xD2b0HmDG9s7woeeVDpXRKA2V3BW6LItgUW+9gXViGhle2bQpY/kwOQLLl/sg9r3QKsrrIW+7fpi6yQcq+FIMSkGLB9hh4W7mqjPTUlDdB4c7AxKIZFAprlFlgTdWavdFdqwVmpPMh6ZwfOvWdH+sFcM0QIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAAYw2HWBFsAyEZ9hdEkHIcGwk5lKY4PpzHH6xlVzPdqCKWBX+kepWe0dZWyOZbzR/i5n6S486Do2o8fQhzMbfFMLd4OAtv/4XCeieX++v31JJlh2vpL3Yz4RkNUjiAXVG80/z1f/BtVXrLqhSTzymceyiJvoA3byuqURGG9NBovT</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

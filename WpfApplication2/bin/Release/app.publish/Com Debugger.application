@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xrml="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <assemblyIdentity name="Com Debugger.application" version="3.0.0.13" publicKeyToken="d080fba1e9255996" language="en" processorArchitecture="msil" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <description asmv2:publisher="Haley" asmv2:product="Com Debugger" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <deployment install="true" mapFileExtensions="true" co.v1:createDesktopShortcut="true">
+    <subscription>
+      <update>
+        <beforeApplicationStartup />
+      </update>
+    </subscription>
+    <deploymentProvider codebase="file://10.193.102.47/shareserver/IDE_Software/COM_DEBUGGER/Com%20Debugger.application" />
+  </deployment>
+  <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
+    <framework targetVersion="4.0" profile="Client" supportedRuntime="4.0.30319" />
+    <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
+  </compatibleFrameworks>
+  <dependency>
+    <dependentAssembly dependencyType="install" codebase="Application Files\Com Debugger_3_0_0_13\Com Debugger.exe.manifest" size="10415">
+      <assemblyIdentity name="Com Debugger.exe" version="3.0.0.13" publicKeyToken="d080fba1e9255996" language="en" processorArchitecture="msil" type="win32" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>LMquRCVO32pg0c7dF1PKZzO040c=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+<publisherIdentity name="CN=FSL\B51762" issuerKeyHash="add1e0dce6a1d6ff19ee0ce8c92aead5eb8843c0" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>MDiY/W2pOgh4Ijz/AbtS3LWolgo=</DigestValue></Reference></SignedInfo><SignatureValue>di9bSH2pFK9Pv++R5SLnxuo4vI//8LKP5ujBqw9uIMJ6SSa+L6nRSdJFoU9O47bc45qxn2fshtYXeaNz+nhe/SpgL6wzH/VyZNJcMM4AKRuSx2wgyg2U+ZhD/jNHQ1k8r+o7HhqVScszO1f3I3ejkIZQv+h0ZIAJVMnMjg7cyN4=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>yBhx30o4CFdCPRd6f8Q9m9B5gxvbO8KHnlQ6V0SgNldwVuiyLYFFvvYF1YhoZXtm0KWP5MDkCy5f7IPa90CrK6yFvu36YuskHKvhSDEpBiwfYYeFu5qoz01JQ3QeHOwMSiGRQKa5RZYE3Vmr3RXasFZqTzIemcHzr1nR/rBXDNE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="0a96a8b5dc52bb01ff3c2278083aa96dfd983830" Description="" Url=""><as:assemblyIdentity name="Com Debugger.application" version="3.0.0.13" publicKeyToken="d080fba1e9255996" language="en" processorArchitecture="msil" xmlns="urn:schemas-microsoft-com:asm.v1" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=FSL\B51762</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>5xP3BJXgt51WzP8Y3XzCHq/aXf0=</DigestValue></Reference></SignedInfo><SignatureValue>fVNTx74M9A0PAhB7IbkXJo7cl4CIpMkECHV/AATZqATVU5QOuTzmFbsE1mhevcD5HMFu4TXY0NxoKGLLAoEYxMU3V2vSIoVqGNzo81UEATKoh6tlnCoHQFkN8wxBIbXUTjZqQvx417PFE8kBIfpN0i3lmE58c76VGWIQzNtYx3M=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>yBhx30o4CFdCPRd6f8Q9m9B5gxvbO8KHnlQ6V0SgNldwVuiyLYFFvvYF1YhoZXtm0KWP5MDkCy5f7IPa90CrK6yFvu36YuskHKvhSDEpBiwfYYeFu5qoz01JQ3QeHOwMSiGRQKa5RZYE3Vmr3RXasFZqTzIemcHzr1nR/rBXDNE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBwTCCASqgAwIBAgIQFEoy48Z6pYRGGloaolvNiDANBgkqhkiG9w0BAQsFADAfMR0wGwYDVQQDHhQARgBTAEwAXABCADUAMQA3ADYAMjAeFw0xNTEyMjAxMDIxMDlaFw0xNjEyMTkxNjIxMDlaMB8xHTAbBgNVBAMeFABGAFMATABcAEIANQAxADcANgAyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIGHHfSjgIV0I9F3p/xD2b0HmDG9s7woeeVDpXRKA2V3BW6LItgUW+9gXViGhle2bQpY/kwOQLLl/sg9r3QKsrrIW+7fpi6yQcq+FIMSkGLB9hh4W7mqjPTUlDdB4c7AxKIZFAprlFlgTdWavdFdqwVmpPMh6ZwfOvWdH+sFcM0QIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAAYw2HWBFsAyEZ9hdEkHIcGwk5lKY4PpzHH6xlVzPdqCKWBX+kepWe0dZWyOZbzR/i5n6S486Do2o8fQhzMbfFMLd4OAtv/4XCeieX++v31JJlh2vpL3Yz4RkNUjiAXVG80/z1f/BtVXrLqhSTzymceyiJvoA3byuqURGG9NBovT</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
