@@ -28,3 +28,10 @@ locals={
 
 execfile(ScriptPath, locals)
 
+
+
+# import os
+# ymlfile = os.path.dirname(ScriptPath) + "/info.yml"
+
+# os.system("python " + "test.py " + ymlfile)
+

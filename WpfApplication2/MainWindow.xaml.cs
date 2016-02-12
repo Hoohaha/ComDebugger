@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +13,7 @@ using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-
+using System.Diagnostics;
 
 namespace COM_DEBUGGER
 {
@@ -29,27 +30,28 @@ namespace COM_DEBUGGER
         private SolidColorBrush colorwhite = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         private SolidColorBrush colorblue = new SolidColorBrush(Color.FromArgb(255, 56, 150, 212));
         private SolidColorBrush colorblack = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+        private SolidColorBrush colorred = new SolidColorBrush(Color.FromArgb(255, 255, 0,0));
 
         private bool ScriptsRuningState = false;
         private Thread ScriptsThread;
         private string FilePath = string.Empty;
-        private string VirtualPort = "Virtual Port";
+        private string VirtualPort = "Virtual";
         private bool FirstConfig = true;
         private ObservableCollection<FileItem> ScriptsSource = new ObservableCollection<FileItem>();
+        ObservableCollection<CMDNode> CMDTree;
 
         delegate void HanderInterfaceUpdataDelegate();
-        private HanderInterfaceUpdataDelegate ToolBoxHandle;
+        
+
 
         public MainWindow()
         {
             InitializeComponent();
-
+      
             sp1 = new Serial(getData1);
             sp2 = new Serial(getData2);
 
             initial_combobox();
-            //ScriptsList.ItemsSource = ScriptsSource;
-
             LoadCommandList();
             addPortNames(comboBox_Ports1, comboBox_Ports2);
             ScriptsList.ItemsSource = ScriptsSource;
@@ -59,7 +61,7 @@ namespace COM_DEBUGGER
         // Serial initialization
         private List<string> getValidSerialPorts()
         {
-            List<string> result = new List<string>();
+            List<string> comlist = new List<string>();
             // use registry info to get com info
             RegistryKey hklm = Registry.LocalMachine;
             RegistryKey hs = hklm.OpenSubKey(@"HARDWARE\DEVICEMAP\SERIALCOMM");
@@ -68,7 +70,7 @@ namespace COM_DEBUGGER
             {
                 for (int i = 0; i < hs.ValueCount; i++)
                 {
-                    result.Add(hs.GetValue(hs.GetValueNames()[i]).ToString());
+                    comlist.Add(hs.GetValue(hs.GetValueNames()[i]).ToString());
                 }
             }
             catch(Exception ex)
@@ -76,7 +78,7 @@ namespace COM_DEBUGGER
                // MessageBox.Show(ex.Message);
             }
             hklm.Close();
-            return result;
+            return comlist;
         }
 
 
@@ -102,8 +104,17 @@ namespace COM_DEBUGGER
                 cbox1.SelectedIndex = 0;
                 cbox2.SelectedIndex = 0;
             }
-            cbox1.SelectedIndex = 1;
-            cbox2.SelectedIndex = 2;
+            else if (PortListBox.Items.Count==1)
+            {
+                cbox1.SelectedIndex = 1;
+                cbox2.SelectedIndex = 0;
+            }
+            else if (PortListBox.Items.Count>=2)
+            {
+                cbox1.SelectedIndex = 1;
+                cbox2.SelectedIndex = 2;
+            }
+
             return true;
         }
 
@@ -141,6 +152,9 @@ namespace COM_DEBUGGER
             comboBox_Parity2.SelectedItem = "None";
             comboBox_BaudRate2.SelectedItem = 115200;
             FirstConfig = false;
+
+            NewLineCheck1.IsChecked = true;
+            NewLineCheck2.IsChecked = true;
         }
         private void ClosePorts()
         {
@@ -181,7 +195,7 @@ namespace COM_DEBUGGER
 
             if (sp.IsOpening)
             {
-                sp.ReceivedBytesThreshold = 4096;
+                //sp.ReceivedBytesThreshold = 4096;
                 sp.DataReceived -= new SerialDataReceivedEventHandler(sp.Data_Received);
                 sp.Closes();
                 SetOpbuttonOpenState(button);
@@ -199,9 +213,10 @@ namespace COM_DEBUGGER
                     return;
                 }
                 sp.Config(PortCfgInfo);//config portname baudrate etc...
+                sp.ReceivedBytesThreshold = 1024;
                 sp.PanelObject = this;
-                sp.ReadTimeout = 500;
-                sp.WriteTimeout = 500;
+                sp.ReadTimeout = 300;
+                sp.WriteTimeout = 300;
                 sp.ReceivedBytesThreshold = 1;
                 sp.DtrEnable = true;
                 sp.RtsEnable = true;
@@ -326,7 +341,7 @@ namespace COM_DEBUGGER
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
-                String[] files = (String[])e.Data.GetData(DataFormats.FileDrop);
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 foreach (string s in files)
                 {
@@ -352,6 +367,7 @@ namespace COM_DEBUGGER
 
         private void RUNButton_Click(object sender, RoutedEventArgs e)
         {
+            RUNButton.Focusable = false;
             if (ScriptsList.SelectedItem != null)
             {
                 Scripts_run();
@@ -372,7 +388,7 @@ namespace COM_DEBUGGER
 
         private void Scripts_run()
         {
-            if(!ScriptsRuningState)
+            if (!ScriptsRuningState)
             {
                 if (!sp1.IsOpening || !sp2.IsOpening)
                 {
@@ -388,7 +404,9 @@ namespace COM_DEBUGGER
                 Op_Button2.IsEnabled = false;
                 RefreshButton.IsEnabled = false;
                 RUNButton.Content = "STOP";
-                RUNButton.Background = colorblue;
+                RUNButton.Foreground = colorwhite;
+                RUNButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
+                RUNButton.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
             }
             else
             {
@@ -406,12 +424,61 @@ namespace COM_DEBUGGER
             RefreshButton.IsEnabled = true;
             RUNButton.Content = "RUN";
             RUNButton.Background = colorwhite;
+            RUNButton.Foreground = colorblack;
+        }
+
+        private void TextMatch()
+        {
+            string[] keys = new string[20];
+            string[] values = new string[20];
+            bool r = false;
+            Regex Pattern;
+
+            string AppPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string IniPath = AppPath + "/abc.ini";
+
+            string dirpath = Path.GetDirectoryName(FilePath);
+            Process GProcess = new Process();
+
+            GProcess.StartInfo.FileName = @"python ";
+            GProcess.StartInfo.Arguments = @"interface/test.py " + dirpath + "/info.yml";
+            GProcess.StartInfo.UseShellExecute = false;
+            GProcess.StartInfo.CreateNoWindow = true;
+            GProcess.Start();
+            GProcess.WaitForExit();
+
+
+            IniOperations.GetAllKeyValues("pattern", out keys,out values, IniPath);
+            
+            foreach (string t in values)
+            {
+                textbox1.AppendText(t);
+                Pattern = new Regex(t);
+                r = Pattern.IsMatch(textbox1.Text);
+                if (r)
+                    MessageBox.Show("YES");
+                else
+                    MessageBox.Show("No");
+            }
+
+            IniOperations.GetAllKeyValues("no_pattern", out keys, out values, IniPath);
+            foreach (string t in values)
+            {
+                textbox1.AppendText(t);
+                Pattern = new Regex(t);
+                r = Pattern.IsMatch(textbox1.Text);
+                if (r)
+                    MessageBox.Show("No");
+                else
+                    MessageBox.Show("Yes");
+            }
         }
 
         private void exectue_py()
         {
             ScriptsRuningState = true;
-            ToolBoxHandle = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
+            HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
+            HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
 
             string PythonPath = string.Empty;
             string PythonLibPath1 = string.Empty;
@@ -422,8 +489,13 @@ namespace COM_DEBUGGER
             PythonLibPath2 = file.ReadLine();
             file.Close();
 
+            //init serial state
+            sp1.SendNewLineIsEnabled = false;
+            sp1.SendNewLineIsEnabled = false;
+            sp1.IsScriptRun = true;
+            sp2.IsScriptRun = true;
 
-
+            //init python environment
             ScriptEngine engine = Python.CreateEngine();
             var PythonLibPaths = engine.GetSearchPaths();
             if (PythonPath!=string.Empty)
@@ -439,17 +511,15 @@ namespace COM_DEBUGGER
             {
                 PythonLibPaths.Add(PythonLibPath2);
             }
-
             engine.SetSearchPaths(PythonLibPaths);
             ScriptScope scope = engine.CreateScope();
-            sp1.SendNewLineIsEnabled=false;
-            sp1.SendNewLineIsEnabled=false;
             scope.SetVariable("SEND1", (Action<string>)sp1.Send_Data);
             scope.SetVariable("SEND2", (Action<string>)sp2.Send_Data);
             scope.SetVariable("ScriptPath", FilePath);
             ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
             try
             {
+                //run
                 var result = script.Execute(scope);
             }
             catch (Exception ex)
@@ -459,12 +529,17 @@ namespace COM_DEBUGGER
                     string ErrorMessage = "Error: " + FilePath + "\r\n  " + ex.Message;
                     MessageBox.Show(ErrorMessage);
                 }
-
             }
-            Dispatcher.Invoke(ToolBoxHandle);
+            //Match regular
+            Dispatcher.Invoke(DeleTextMatch);
+            //enable tool box
+            Dispatcher.Invoke(DeleEnableToolBox);
+            //recover serail state
             ScriptsRuningState = false;
             sp1.SendNewLineIsEnabled = false;
             sp1.SendNewLineIsEnabled = false;
+            sp1.IsScriptRun = false;
+            sp2.IsScriptRun = false;
         }
         #endregion
 
@@ -676,15 +751,7 @@ namespace COM_DEBUGGER
             }
             file.Close();
 
-            file = new StreamReader("config/KABS_COMMAND.ini", Encoding.Default);
-            s = "";
-            while (s != null)
-            {
-                s = file.ReadLine();
-                if (!string.IsNullOrEmpty(s))
-                    KABSList.Items.Add(s);
-            }
-            file.Close();
+
         }
 
         private void CommandList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -741,8 +808,62 @@ namespace COM_DEBUGGER
             return false;
         }
 
+        private void treeView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var tree = sender as TreeView;
+            TreeViewItem item = new TreeViewItem();
+            
+            string[] keys = new string[10];
+            string[] values = new string[10];
+            string[] sections = new string[100];
+
+           CMDTree = new ObservableCollection<CMDNode>();
+
+            IniOperations.GetAllSectionNames(out sections, "config/KABS_COMMAND.ini");
+            
+            int i = 0, j =0;
+            
+            for(i=0;i<sections.Length;i++)
+            {
+                IniOperations.GetAllKeyValues(sections[i], out keys, out values, "config/KABS_COMMAND.ini");
+                CMDNode node = new CMDNode() { NodeName=sections[i], ID=1};
+                for(j=0;j<keys.Length;j++)
+                {
+                    node.NextNode.Add(new CMDNode { NodeName = keys[j], ID=2});
+                 }
+                
+                CMDTree.Add(node);
+            }
+            tree.ItemsSource = CMDTree;
+        }
+
+
+        private void treeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                var tree = sender as TreeView;
+                CMDNode item = tree.SelectedItem as CMDNode;
+                if (item.ID == 2)
+                    sp2.Send_Data(item.NodeName);
+            }
+            catch(Exception ex)
+            { }
+        }
+
+        private void Help_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
+    public class CMDNode
+    {
+        public CMDNode(){ NextNode = new ObservableCollection<CMDNode>(); }
+        public int ID { set; get; }
+        public string NodeName { set; get; }
+        public ObservableCollection<CMDNode> NextNode { get; set; }
+    }
 
     public class PortConfig
     {
@@ -767,6 +888,7 @@ namespace COM_DEBUGGER
         private bool SendNewLineState = true;
         int n;
         byte[] buf;
+        private bool SCRIPTRUN = false;
         private bool VirtualOpen = false;
 
         public Serial(Action<string> DisplayData)
@@ -798,6 +920,11 @@ namespace COM_DEBUGGER
             get { return this.GetState(); }
         }
 
+        public bool IsScriptRun
+        {
+            set { SCRIPTRUN = value; }
+        }
+
         public void Config(PortConfig portcfg)
         {
             this.PortName = portcfg.portname;
@@ -811,7 +938,7 @@ namespace COM_DEBUGGER
 
         public void Opens()
         {
-            if (this.PortName == "Virtual Port")
+            if (this.PortName == "Virtual")
             {
                 VirtualOpen = true;
             }
@@ -823,7 +950,7 @@ namespace COM_DEBUGGER
 
         public void Closes()
         {
-            if (this.PortName == "Virtual Port")
+            if (PortName == "Virtual")
             {
                 VirtualOpen = false;
             }
@@ -835,14 +962,14 @@ namespace COM_DEBUGGER
 
         public void Data_Received(object sender, SerialDataReceivedEventArgs e)
         {
-            if (this.IsOpen)
+            if (IsOpen)
             {
-                n = this.BytesToRead;
+                n = BytesToRead;
                 buf = new byte[n];
                 this.Read(buf, 0, n);
 
                 string abc = System.Text.Encoding.Default.GetString(buf);
-                Thread.Sleep(60);
+                Thread.Sleep(20);
                 panel.Dispatcher.BeginInvoke(DisplayHandle, new string[] { abc });
             }
 
@@ -861,6 +988,11 @@ namespace COM_DEBUGGER
                 {
                     panel.Dispatcher.Invoke(DisplayHandle, new string[] { strSend });
                     return;
+                }
+                else if (SCRIPTRUN)
+                {
+                    this.Write(strSend);
+                    panel.Dispatcher.Invoke(DisplayHandle, new string[] { strSend });
                 }
                 else
                 {
@@ -881,10 +1013,15 @@ namespace COM_DEBUGGER
     {
         private string _FileName;
         private string _FilePath;
+        private string _DirName;
         public FileItem(string path)
         {
-            _FileName = path.Substring(path.LastIndexOf("\\") + 1);
+           
+            string[] elements = Regex.Split(path, @"\\");
+            int l = elements.Length;
+            _FileName = string.Format("{0} - {1}",elements[l - 1], elements[l - 2]);
             _FilePath = path;
+            _DirName = Path.GetDirectoryName(path);
         }
         public string Name
         {
@@ -893,14 +1030,22 @@ namespace COM_DEBUGGER
                 return _FileName;
             }
         }
-        public string Path
+        public string FilePath
         {
             get
             {
                 return _FilePath;
             }
         }
-
+        public string Dirname
+        {
+            get
+            {
+                return _DirName;
+            }
+        }
     }
+
+
 }
 

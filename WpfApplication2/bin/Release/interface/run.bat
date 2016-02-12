@@ -1,0 +1,1 @@
+python test.py C:\SourceCode\app_data\2.0\ksdk_demo\hello_world\info.yml

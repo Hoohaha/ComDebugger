@@ -1,26 +1,53 @@
-﻿<Window
+﻿<Window x:Class="COM_DEBUGGER.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="COM_DEBUGGER.MainWindow"
-        Title="COM DEBUGGER" Margin="1,0,0,0" MinWidth="650" MinHeight="500" Width="800" Height="650" WindowStartupLocation="CenterScreen" Icon="logo.ico">
+        xmlns:local="clr-namespace:COM_DEBUGGER"
+        Title="ComDebugger V3.7" Margin="1,0,0,0" MinWidth="650" MinHeight="650" Width="1100" Height="750" WindowStartupLocation="CenterScreen" Icon="logo.ico">
+    <Window.Resources>
+        <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" />
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0"  Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Style="{DynamicResource ScrollBarStyle1}" MinWidth="13" Width="13" Background="#FF686868"/>
+            </Grid>
+        </ControlTemplate>
+    </Window.Resources>
     <Grid x:Name="BigGrid" Background="#FF2D2D30">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250*"/>
-            <ColumnDefinition Width="250*"/>
-            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="230*"/>
+            <ColumnDefinition Width="230*"/>
+            <ColumnDefinition Width="140*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*"/>
-            <RowDefinition Height="591*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="649*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="GroupGrid1" Margin="5,5,2,0" Grid.Row="1" SnapsToDevicePixels="True">
+        <ToolBarPanel x:Name="MenuBar" Margin="1" Grid.ColumnSpan="3">
+            <Menu HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Foreground="White" VerticalAlignment="Bottom" Padding="0" FontSize="14" Margin="10,0,0,0" HorizontalAlignment="Left">
+                <MenuItem Header="File(F)" Background="{x:Null}" Foreground="White" Padding="3,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+                    <MenuItem Header="Exit" Background="#FF2D2D30" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Exit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Settings(S)" Foreground="White" Padding="3,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <MenuItem Background="#FF2D2D30" Header="Options" Click="Options_Click"/>
+                </MenuItem>
+                <MenuItem Header="Help(H)" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Help_Click"/>
+                <MenuItem Header="About(A)" Click="About_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Menu>
+        </ToolBarPanel>
+        <ToolBarPanel x:Name="ToolBar" Margin="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+        <Grid x:Name="GroupGrid1" Margin="0,0,2,0" Grid.Row="2" SnapsToDevicePixels="True" Grid.RowSpan="2" Background="#FF3E3E42">
             <Grid.RowDefinitions>
-                <RowDefinition Height="290*"/>
-                <RowDefinition Height="27*"/>
-                <RowDefinition Height="120*"/>
+                <RowDefinition Height="300*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="90*"/>
             </Grid.RowDefinitions>
-            <ScrollViewer x:Name="serial1" Margin="4,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" BorderBrush="#FF5C5D5D" BorderThickness="1">
-                <TextBox x:Name="textbox1" TextWrapping="Wrap" MinWidth="200" MinHeight="200" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="IBeam" IsReadOnly="True" AutoWordSelection="True" Background="#FF1E1E1E" BorderBrush="#FF7A7B7C" Foreground="White">
+            <Rectangle Margin="0" Stroke="#FF686868"/>
+            <ScrollViewer x:Name="serial1" Margin="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" BorderThickness="1" TabIndex="-1" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                <TextBox x:Name="textbox1" TextWrapping="Wrap" MinWidth="200" MinHeight="200" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="IBeam" IsReadOnly="True" AutoWordSelection="True" Background="#FF1E1E1E" BorderBrush="{x:Null}" Foreground="White" TabIndex="-1">
                     <TextBox.ContextMenu>
                         <ContextMenu x:Name="contextmenu1">
                             <MenuItem x:Name="Clear1" Header="Clear" Click="Clear_Serial1_Click"/>
@@ -31,131 +58,57 @@
                     </TextBox.ContextMenu>
                 </TextBox>
             </ScrollViewer>
-            <TextBox x:Name="sendbox1" Margin="0" TextWrapping="Wrap" UndoLimit="20" KeyDown="sendbox1_KeyDown" FontSize="14.667" VerticalContentAlignment="Center" FontWeight="Bold" FontFamily="Microsoft JhengHei UI" HorizontalScrollBarVisibility="Auto" Grid.Row="1" BorderBrush="{x:Null}" Background="#FFF0EEEE"/>
-            <Grid x:Name="ContolPanel" Margin="0" Grid.Row="2" Background="#FF007ACC">
+            <TextBox x:Name="sendbox1" Margin="0" TextWrapping="Wrap" UndoLimit="20" KeyDown="sendbox1_KeyDown" FontSize="16" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Auto" Grid.Row="1" BorderBrush="{x:Null}" Background="#FFDDDDDD" FontWeight="Bold" FontFamily="Microsoft JhengHei UI" Padding="0" SelectionBrush="#FF5F90C2"/>
+            <Grid x:Name="ContolPanel1" Margin="0" Grid.Row="2" Background="#FF007ACC">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="27*"/>
-                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="292*"/>
+                    <ColumnDefinition Width="87*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="79*"/>
+                    <RowDefinition Height="60*"/>
+                    <RowDefinition Height="90*"/>
                 </Grid.RowDefinitions>
-                <WrapPanel x:Name="WrapPorts1" Margin="10,4,0,3.6" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="138">
-                    <Label Content="Ports  " HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="62" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" FontWeight="Bold"/>
-                    <ComboBox x:Name="comboBox_Ports1" Height="23" VerticalAlignment="Center" SelectionChanged="Ports_SelectionChanged" Width="75" Background="White" HorizontalAlignment="Center"/>
+                <WrapPanel x:Name="PORTS_BAUDRATE1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <WrapPanel x:Name="WrapPorts1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="150">
+                        <Label Content="Port Name" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" FontWeight="Bold" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,5,2,5" Margin="0" Height="30" Width="63"/>
+                        <ComboBox x:Name="comboBox_Ports1" Height="25" VerticalAlignment="Center" SelectionChanged="Ports_SelectionChanged" Width="72" Background="White" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="6,0,0,0"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="WrapBaudrate1" VerticalAlignment="Center" HorizontalAlignment="Left" Height="30" Width="150">
+                        <Label Content="Baud Rate" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Foreground="#FFFBFBFB" FontWeight="Bold" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,5,2,5" ScrollViewer.CanContentScroll="True" Width="63"/>
+                        <ComboBox x:Name="comboBox_BaudRate1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="72" Height="25" SelectionChanged="comboBox_BaudRate_SelectionChanged" Background="White" Padding="6,0,0,0" VerticalContentAlignment="Center"/>
+                    </WrapPanel>
                 </WrapPanel>
-                <WrapPanel x:Name="WrapBaudrate1" Margin="10,4.4,0,4" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Height="30" Width="138">
-                    <Label Content="Baudrate" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="62" Foreground="#FFFBFBFB" FontWeight="Bold"/>
-                    <ComboBox x:Name="comboBox_BaudRate1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Height="23" SelectionChanged="comboBox_BaudRate_SelectionChanged" Background="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
+                <WrapPanel x:Name="OTHERS_CONFIG1" Margin="8,0,0,0" Grid.Row="1" VerticalAlignment="Center" Height="38">
+                    <WrapPanel x:Name="StopBits_panel1" VerticalAlignment="Center" Width="73" HorizontalAlignment="Center">
+                        <Label x:Name="StopBist1" Content="Stop Bits" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="7,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_StopBits1" Width="67" HorizontalAlignment="Right" SelectionChanged="comboBox_StopBits_SelectionChanged" VerticalContentAlignment="Center" Padding="5,3,0,3" Background="White" VerticalAlignment="Center" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="DataBits_panel1" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="DataBits1" Content="Data Bits" HorizontalAlignment="Center" Padding="7,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_Databits1" Padding="5,3,0,3" SelectionChanged="comboBox_Databits_SelectionChanged" VerticalContentAlignment="Center" Background="White" Width="67" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="Parity_panel1" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="label1" Content="Parity" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="7,0,0,0" VerticalContentAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_Parity1" HorizontalAlignment="Left" Width="67" Padding="5,0,0,0" VerticalAlignment="Center" SelectionChanged="comboBox_Parity_SelectionChanged" VerticalContentAlignment="Center" Background="White" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="HandShake_panel1" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="handshake1" Content="Flow Control" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,0,4,0" Foreground="#FFFFF6F6"/>
+                        <ComboBox x:Name="comboBox_HandShake1" HorizontalAlignment="Left" Width="67" Padding="5,0,0,0" Height="23" VerticalAlignment="Center" SelectionChanged="comboBox_HandShake_Selected" VerticalContentAlignment="Center" Background="White"/>
+                    </WrapPanel>
                 </WrapPanel>
-                <Button x:Name="Op_Button1" Content="Open" Width="70" Click="Button_Open1" Height="50" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,13,19.8,13" Background="White" FontWeight="Bold" Grid.Column="1" Grid.RowSpan="2" />
-                <CheckBox x:Name="NewLineCheck1" Content="Send New line" HorizontalAlignment="Right" Margin="0,10,20,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Foreground="White" IsChecked="True" Click="SendNewLineChecked" Background="{x:Null}" BorderBrush="#FF007ACC" Height="16" Width="93"/>
-                <Expander x:Name="Advanced1" Header="Advanced" Margin="0,8,0,7.6" VerticalContentAlignment="Center" Foreground="White" Grid.Row="2" HorizontalAlignment="Left" Background="#FF007ACC" Width="78">
-                    <Grid HorizontalAlignment="Left" Margin="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200*"/>
-                            <ColumnDefinition Width="200*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="LabelStopBits1" Content="DataBits" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0" Width="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_Databits1" Margin="60,0,0,0" Width="70" HorizontalAlignment="Left" Padding="0" Height="18" VerticalAlignment="Center" SelectionChanged="comboBox_Databits_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="White"/>
-                        <Label x:Name="label" Content="StopBits" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="50" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center" Grid.Column="1" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_StopBits1" Margin="70,0,0,0" Width="70" HorizontalAlignment="Left" Height="18" VerticalAlignment="Center" Grid.Column="1" SelectionChanged="comboBox_StopBits_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Background="White"/>
-                        <Label x:Name="label1" Content="Parity" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" Width="50" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_Parity1" Margin="60,0,0,0" HorizontalAlignment="Left" Width="70" Padding="0" Height="18" VerticalAlignment="Center" Grid.Row="1" SelectionChanged="comboBox_Parity_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="White"/>
-                        <Label x:Name="label2" Content="HandShake" HorizontalAlignment="Left" Margin="7,5,0,4" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Foreground="#FFFFF6F6"/>
-                        <ComboBox x:Name="comboBox_HandShake1" Margin="70,0,0,0" HorizontalAlignment="Left" Width="70" Padding="0" Height="18" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" SelectionChanged="comboBox_HandShake_Selected" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                    </Grid>
-                </Expander>
+                <Button x:Name="Op_Button1" Content="Open" Click="Button_Open1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Background="White" FontWeight="Bold" Grid.Column="1" Padding="15,13" />
+                <CheckBox x:Name="NewLineCheck1" Content="Send '\r\n'" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Foreground="White" Click="SendNewLineChecked" Background="{x:Null}" BorderBrush="#FF007ACC" Grid.Column="1" Padding="0"/>
             </Grid>
         </Grid>
-        <ToolBarPanel x:Name="ToolBar" Margin="0" Grid.ColumnSpan="3">
-            <Menu HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Foreground="White" VerticalAlignment="Center" Padding="0,3,0,0" FontSize="14" Margin="10,0,0,0">
-                <MenuItem Header="File(F)" Background="{x:Null}" Foreground="White">
-                    <MenuItem Header="Exit" Background="#FF2D2D30" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Exit_Click"/>
-                </MenuItem>
-                <MenuItem Header="Settings(S)" Foreground="White">
-                    <MenuItem Background="#FF2D2D30" Header="Options" Click="Options_Click"/>
-                </MenuItem>
-                <MenuItem Header="Help(H)"/>
-                <MenuItem Header="About(A)" Click="About_Click"/>
-            </Menu>
-        </ToolBarPanel>
-        <Grid x:Name="GroupGrid2" Margin="2,5,0,0" Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="290*"/>
-                <RowDefinition Height="27*"/>
-                <RowDefinition Height="120*"/>
-            </Grid.RowDefinitions>
-            <ScrollViewer x:Name="serial2" Margin="4,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" BorderBrush="#FF5C5D5D" Background="#FF7F7E7E">
-                <TextBox x:Name="textbox2" TextWrapping="Wrap" MinWidth="200" MinHeight="200"  Background="#FF1E1E1E" Padding="10,10,5,5" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="IBeam" IsReadOnly="True" AutoWordSelection="True" BorderBrush="{x:Null}" SelectionBrush="White" Foreground="White" Margin="0">
-                    <TextBox.ContextMenu>
-                        <ContextMenu x:Name="contextmenu2">
-                            <MenuItem x:Name="Clear2" Header="Clear" Click="Clear_Serial1_Click"/>
-                            <MenuItem x:Name="Clear_All12" Header="Clear Left and Right" Click="Clear_All_Click"/>
-                            <MenuItem x:Name="Copy2" Header="Copy" Click="Copy_Click"/>
-                            <MenuItem x:Name="SelectAll2" Header="Select All" Click="SelectAll_Click"/>
-                        </ContextMenu>
-                    </TextBox.ContextMenu>
-                </TextBox>
-            </ScrollViewer>
-            <TextBox x:Name="sendbox2" Margin="0" TextWrapping="Wrap" UndoLimit="20" KeyDown="sendbox1_KeyDown" FontSize="14.667" VerticalContentAlignment="Center" FontWeight="Bold" FontFamily="Microsoft JhengHei UI" HorizontalScrollBarVisibility="Auto" Grid.Row="1" BorderBrush="{x:Null}" Background="#FFF0EEEE"/>
-            <Grid x:Name="ContolPanel_Copy" Margin="0,0,-1,0" Grid.Row="2" Background="#FF007ACC">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160*"/>
-                    <ColumnDefinition Width="159*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="79*"/>
-                </Grid.RowDefinitions>
-                <WrapPanel x:Name="WrapPorts2" Margin="10,4,0,3.6" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="138">
-                    <Label Content="Ports  " HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="62" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" FontWeight="Bold"/>
-                    <ComboBox x:Name="comboBox_Ports2" Height="23" VerticalAlignment="Center" SelectionChanged="Ports_SelectionChanged" Width="75" Background="White" HorizontalAlignment="Center"/>
-                </WrapPanel>
-                <WrapPanel x:Name="WrapBaudrate2" Margin="10,4.4,0,4" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Height="30" Width="138">
-                    <Label Content="Baudrate" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="62" Foreground="#FFFBFBFB" FontWeight="Bold"/>
-                    <ComboBox x:Name="comboBox_BaudRate2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Height="23" SelectionChanged="comboBox_BaudRate_SelectionChanged" Background="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
-                </WrapPanel>
-                <Button x:Name="Op_Button2" Content="Open" Width="70" Click="Button_Open1" Height="50" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,13,20.2,13" Background="White" FontWeight="Bold" Grid.Column="1" Grid.RowSpan="2" />
-                <CheckBox x:Name="NewLineCheck2" Content="Send New line" HorizontalAlignment="Right" Margin="15,10,20,0" Grid.Row="2" VerticalAlignment="Top" Grid.Column="1" Foreground="White" IsChecked="False" Click="SendNewLineChecked" BorderBrush="#FF007ACC" Background="{x:Null}" Height="16" Width="93"/>
-                <Expander x:Name="Advanced2" Header="Advanced" Margin="0,8,0,7.6" VerticalContentAlignment="Center" Foreground="White" Grid.Row="2" HorizontalAlignment="Left" Width="78">
-                    <Grid HorizontalAlignment="Left" Margin="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200*"/>
-                            <ColumnDefinition Width="200*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="LabelStopBits2" Content="DataBits" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0" Width="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_Databits2" Margin="60,0,0,0" Width="70" HorizontalAlignment="Left" Padding="0" Height="18" VerticalAlignment="Center" SelectionChanged="comboBox_Databits_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="White"/>
-                        <Label x:Name="label3" Content="StopBits" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="50" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center" Grid.Column="1" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_StopBits2" Margin="70,0,0,0" Width="70" HorizontalAlignment="Left" Height="18" VerticalAlignment="Center" Grid.Column="1" SelectionChanged="comboBox_StopBits_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Background="White"/>
-                        <Label x:Name="label4" Content="Parity" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" Width="50" Foreground="White"/>
-                        <ComboBox x:Name="comboBox_Parity2" Margin="60,0,0,0" HorizontalAlignment="Left" Width="70" Padding="0" Height="18" VerticalAlignment="Center" Grid.Row="1" SelectionChanged="comboBox_Parity_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="White"/>
-                        <Label x:Name="label5" Content="HandShake" HorizontalAlignment="Left" Margin="7,5,0,4" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Foreground="#FFFFF6F6"/>
-                        <ComboBox x:Name="comboBox_HandShake2" Margin="70,0,0,0" HorizontalAlignment="Left" Width="70" Padding="0" Height="18" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" SelectionChanged="comboBox_HandShake_Selected" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                    </Grid>
-                </Expander>
-            </Grid>
-        </Grid>
-        <Grid x:Name="Group3" Grid.Column="2" Margin="5,5,5,0" Grid.RowSpan="2">
+        <Grid x:Name="Group3" Grid.Column="2" Margin="3,0,0,0" Grid.RowSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="28*"/>
-                <RowDefinition Height="420*"/>
+                <RowDefinition Height="410*"/>
                 <RowDefinition Height="2*"/>
-                <RowDefinition Height="162*"/>
+                <RowDefinition Height="150*"/>
             </Grid.RowDefinitions>
             <Rectangle Stroke="#FF0C87D8" Margin="0,0.8,-0.4,-0.2" Grid.Row="3"/>
-            <Grid Margin="0,0.8,-0.4,-0.2" Grid.Row="3" Background="#FF007ACC">
+            <Grid x:Name="portwindow" Margin="0,0.8,-0.4,-0.2" Grid.Row="3" Background="#FF007ACC">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="138*"/>
                     <RowDefinition Height="25*"/>
@@ -165,12 +118,12 @@
                         <ColumnDefinition Width="82*"/>
                         <ColumnDefinition Width="61*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="RefreshButton" Content="refesh" ClickMode="Press" BorderBrush="#FF87878C" Margin="0" RenderTransformOrigin="1.132,22.288" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White"  Click="RefreshButton_Click_1" Padding="2" Grid.Column="1" FontSize="11"/>
+                    <Button x:Name="RefreshButton" Content="refresh" ClickMode="Press" BorderBrush="#FF87878C" Margin="0" RenderTransformOrigin="1.132,22.288" HorizontalAlignment="Center" Background="White"  Click="RefreshButton_Click_1" Padding="2" Grid.Column="1" FontSize="11"/>
                     <Label Content="Ports List" HorizontalAlignment="Left" Width="65" Foreground="White" Margin="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="11" Padding="2" VerticalAlignment="Center"/>
                 </Grid>
-                <ListBox x:Name="PortListBox" Margin="0,0,0.4,0.4" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="{x:Null}"/>
+                <ListBox Name="PortListBox" Margin="0" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="{x:Null}"/>
             </Grid>
-            <TabControl x:Name="CommandSource" AllowDrop="True" Margin="0,0.6,-0.4,0.6" BorderBrush="#FF3896D4" Background="White" Grid.Row="1" Foreground="{x:Null}">
+            <TabControl Name="CommandSource" AllowDrop="True" Margin="0,0.6,-0.4,0.6" BorderBrush="#FF3896D4" Background="White" Grid.Row="1" Foreground="{x:Null}">
                 <TabItem Margin="0" BorderBrush="#FF007ACC" Header="Scripts" Background="#FF3896D4" RenderTransformOrigin="0.5,0.5" FontSize="14">
                     <TabItem.RenderTransform>
                         <TransformGroup>
@@ -190,24 +143,92 @@
                                 <ColumnDefinition Width="66*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="RUNButton" Content="RUN" Margin="0" Click="RUNButton_Click" Background="{x:Null}" BorderBrush="#FF0C87D8" Padding="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" BorderThickness="2"/>
-                            <Button x:Name="ADDButton" Content="ADD" Margin="0" Click="ADDButton_Click" Background="{x:Null}" BorderBrush="#FF0C87D8" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                            <Button Name="RUNButton" Content="RUN" Margin="0" Click="RUNButton_Click" Background="{x:Null}" BorderBrush="#FFD66355" Padding="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" BorderThickness="2" Width="45"/>
+                            <Button Name="ADDButton" Content="ADD" Margin="0" Click="ADDButton_Click" Background="{x:Null}" BorderBrush="#FF0C87D8" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" Width="45"/>
                         </Grid>
-                        <ListBox x:Name="ScriptsList" IsSynchronizedWithCurrentItem="True" Background="White" Foreground="Black" BorderBrush="{x:Null}" Margin="0" MouseDoubleClick="ScriptsList_MouseDoubleClick" AllowDrop="True" Drop="ListBox_Drop" DisplayMemberPath="Name" SelectedValuePath="Path" SnapsToDevicePixels="True" />
+                        <ListBox Name="ScriptsList" IsSynchronizedWithCurrentItem="True" Background="White" Foreground="Black" BorderBrush="{x:Null}" Margin="0" MouseDoubleClick="ScriptsList_MouseDoubleClick" AllowDrop="True" Drop="ListBox_Drop" DisplayMemberPath="Name" SelectedValuePath="FilePath" SnapsToDevicePixels="True"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header=" CPLD" BorderBrush="#FF3896D4" Margin="0" Background="#FF3896D4" FontSize="14.667">
                     <Grid x:Name="CPLD" >
-                        <ListBox x:Name="CPLDList" Margin="0" MouseDoubleClick="CommandList_MouseDoubleClick" BorderBrush="{x:Null}"/>
+                        <ListBox Name="CPLDList" Margin="0" MouseDoubleClick="CommandList_MouseDoubleClick" BorderBrush="{x:Null}"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="KABS" Margin="0" Background="#FF3896D4" BorderBrush="#FF3896D4" FontSize="14.667">
                     <Grid>
-                        <ListBox x:Name="KABSList" Margin="0" FontSize="11" MouseDoubleClick="CommandList_MouseDoubleClick"/>
+                        <TreeView Name="treeView" Margin="0" Loaded="treeView_Loaded" MouseDoubleClick="treeView_MouseDoubleClick" FontSize="13.333" ToolTip="KABS command">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate DataType ="{x:Type local:CMDNode}" ItemsSource="{Binding NextNode}">
+                                    <TextBlock Text="{Binding NodeName}" ToolTip="{Binding NodeName}" Tag="{Binding NodeName}"/>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+
                     </Grid>
 
                 </TabItem>
             </TabControl>
+        </Grid>
+        <Grid x:Name="GroupGrid2" Margin="2,0" Grid.Row="2" SnapsToDevicePixels="True" Background="#FF3E3E42" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="90*"/>
+            </Grid.RowDefinitions>
+            <Rectangle Margin="0" Stroke="#FF686868"/>
+            <ScrollViewer x:Name="serial2" Margin="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" BorderThickness="1" TabIndex="-1" Template="{DynamicResource ScrollViewerControlTemplate1}">
+                <TextBox x:Name="textbox2" TextWrapping="Wrap" MinWidth="200" MinHeight="200" Padding="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="IBeam" IsReadOnly="True" AutoWordSelection="True" Background="#FF1E1E1E" BorderBrush="{x:Null}" Foreground="White" TabIndex="-1">
+                    <TextBox.ContextMenu>
+                        <ContextMenu x:Name="contextmenu2">
+                            <MenuItem x:Name="Clear2" Header="Clear" Click="Clear_Serial1_Click"/>
+                            <MenuItem x:Name="Clear_All2" Header="Clear Left and Right" Click="Clear_All_Click"/>
+                            <MenuItem x:Name="Copy2" Header="Copy" Click="Copy_Click"/>
+                            <MenuItem x:Name="SelectAll2" Header="Select All" Click="SelectAll_Click"/>
+                        </ContextMenu>
+                    </TextBox.ContextMenu>
+                </TextBox>
+            </ScrollViewer>
+            <TextBox x:Name="sendbox2" Margin="0" TextWrapping="Wrap" UndoLimit="20" KeyDown="sendbox1_KeyDown" FontSize="16" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Auto" Grid.Row="1" BorderBrush="{x:Null}" Background="#FFDDDDDD" FontWeight="Bold" FontFamily="Microsoft JhengHei UI" Padding="0" SelectionBrush="#FF5F90C2" />
+            <Grid x:Name="ContolPanel2" Margin="0" Grid.Row="2" Background="#FF007ACC">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="292*"/>
+                    <ColumnDefinition Width="87*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60*"/>
+                    <RowDefinition Height="90*"/>
+                </Grid.RowDefinitions>
+                <WrapPanel x:Name="PORTS_BAUDRATE2" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <WrapPanel x:Name="WrapPorts2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="150">
+                        <Label Content="Port Name" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" FontWeight="Bold" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,5,2,5" Margin="0" Height="30" Width="63"/>
+                        <ComboBox x:Name="comboBox_Ports2" Height="25" VerticalAlignment="Center" SelectionChanged="Ports_SelectionChanged" Width="72" Background="White" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="6,0,0,0"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="WrapBaudrate2" VerticalAlignment="Center" HorizontalAlignment="Left" Height="30" Width="150">
+                        <Label Content="Baud Rate" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Foreground="#FFFBFBFB" FontWeight="Bold" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,5,2,5" ScrollViewer.CanContentScroll="True" Width="63"/>
+                        <ComboBox x:Name="comboBox_BaudRate2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="72" Height="25" SelectionChanged="comboBox_BaudRate_SelectionChanged" Background="White" Padding="6,0,0,0" VerticalContentAlignment="Center"/>
+                    </WrapPanel>
+                </WrapPanel>
+                <WrapPanel x:Name="OTHERS_CONFIG2" Margin="8,0,0,0" Grid.Row="1" VerticalAlignment="Center" Height="38">
+                    <WrapPanel x:Name="StopBits_panel2" VerticalAlignment="Center" Width="73" HorizontalAlignment="Center">
+                        <Label x:Name="StopBist2" Content="Stop Bits" HorizontalAlignment="Center" VerticalContentAlignment="Center" Padding="7,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_StopBits2" Width="67" HorizontalAlignment="Right" SelectionChanged="comboBox_StopBits_SelectionChanged" VerticalContentAlignment="Center" Padding="5,3,0,3" Background="White" VerticalAlignment="Center" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="DataBits_panel2" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="DataBits2" Content="Data Bits" HorizontalAlignment="Center" Padding="7,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_Databits2" Padding="5,3,0,3" SelectionChanged="comboBox_Databits_SelectionChanged" VerticalContentAlignment="Center" Background="White" Width="67" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="Parity_panel2" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="label2" Content="Parity" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="7,0,0,0" VerticalContentAlignment="Center" Foreground="White"/>
+                        <ComboBox x:Name="comboBox_Parity2" HorizontalAlignment="Left" Width="67" Padding="5,0,0,0" VerticalAlignment="Center" SelectionChanged="comboBox_Parity_SelectionChanged" VerticalContentAlignment="Center" Background="White" Height="23"/>
+                    </WrapPanel>
+                    <WrapPanel x:Name="HandShake_panel2" VerticalAlignment="Center" Width="73">
+                        <Label x:Name="handshake2" Content="Flow Control" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Padding="0,0,4,0" Foreground="#FFFFF6F6"/>
+                        <ComboBox x:Name="comboBox_HandShake2" HorizontalAlignment="Left" Width="67" Padding="5,0,0,0" Height="23" VerticalAlignment="Center" SelectionChanged="comboBox_HandShake_Selected" VerticalContentAlignment="Center" Background="White"/>
+                    </WrapPanel>
+                </WrapPanel>
+                <Button x:Name="Op_Button2" Content="Open" Click="Button_Open1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Background="White" FontWeight="Bold" Grid.Column="1" Padding="15,13" />
+                <CheckBox x:Name="NewLineCheck2" Content="Send '\r\n'" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Foreground="White" IsChecked="True" Click="SendNewLineChecked" Background="{x:Null}" BorderBrush="#FF007ACC" Grid.Column="1" Padding="0"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

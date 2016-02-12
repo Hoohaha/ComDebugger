@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>COM_DEBUGGER</RootNamespace>
-    <AssemblyName>Com Debugger</AssemblyName>
+    <AssemblyName>ComDebugger</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -29,7 +29,7 @@
     <PublisherName>Haley</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -77,6 +77,9 @@
   <PropertyGroup>
     <StartupObject>WpfApplication2.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -86,6 +89,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\IronPython 2.7.1\Microsoft.Scripting.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -97,6 +101,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Yaml, Version=1.0.2350.27959, Culture=neutral, PublicKeyToken=0788fe92405bb6fa">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Yaml.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -118,6 +126,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IniOperations.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -147,15 +156,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="CPLD_COMMAND.ini" />
-    <None Include="KABS_COMMAND.ini" />
+    <None Include="config\CPLD_COMMAND.ini" />
+    <None Include="config\KABS_COMMAND.ini" />
+    <None Include="config\python_config.ini" />
     <None Include="KDT_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="python_config.ini" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -183,7 +192,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="interface.py" />
+    <Resource Include="bar_center.png" />
+    <Resource Include="BarUp.png" />
+    <Resource Include="BarDown.png" />
+    <Content Include="interface\interface.py" />
+    <Content Include="Yaml.dll" />
+    <Resource Include="send.ico" />
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup />

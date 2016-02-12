@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Com Debugger")]
+[assembly: AssemblyTitle("ComDebugger")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NXP")]
-[assembly: AssemblyProduct("Com Debugger")]
+[assembly: AssemblyProduct("ComDebugger")]
 [assembly: AssemblyCopyright("Copyright © NXP 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

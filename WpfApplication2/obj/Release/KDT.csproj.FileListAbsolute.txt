@@ -21,13 +21,6 @@ E:\KDT\WpfApplication2\obj\Release\Com Debugger.exe
 E:\KDT\WpfApplication2\obj\Release\Com Debugger.pdb
 E:\KDT\WpfApplication2\bin\Release\Microsoft.Dynamic.dll
 E:\KDT\WpfApplication2\bin\Release\Microsoft.Scripting.Metadata.dll
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Com Debugger.exe.config
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger.exe
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger.pdb
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Com Debugger.exe.manifest
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Com Debugger.application
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Com Debugger.exe
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Com Debugger.pdb
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\About.baml
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\MainWindow.baml
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\OptionWindow.baml
@@ -35,13 +28,23 @@ C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\About.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\MainWindow.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\OptionWindow.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\App.g.cs
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger_Content.g.cs
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger_MarkupCompile.cache
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger.g.resources
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\COM_DEBUGGER.Properties.Resources.resources
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\KDT.csproj.GenerateResource.Cache
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger.exe.manifest
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Com Debugger.application
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Dynamic.dll
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Scripting.Metadata.dll
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\KDT.csprojResolveAssemblyReference.cache
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Yaml.dll
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\GeneratedInternalTypeHelper.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe.config
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe.manifest
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.application
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.pdb
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger_Content.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger_MarkupCompile.cache
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger_MarkupCompile.lref
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.g.resources
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.exe.manifest
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.application
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.exe
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.pdb
