@@ -1,0 +1,6 @@
+	Com Debugger Help
+
+1. How to add new commands?
+2. What does 'Pythonlib1' & 'Pythonlib2' mean?
+3. What does 'View' button mean?
+4. How can I add the scripts?

@@ -44,13 +44,6 @@ E:\KDT\WpfApplication2\obj\Debug\Com Debugger.pdb
 E:\KDT\WpfApplication2\obj\Debug\KDT.csprojResolveAssemblyReference.cache
 E:\KDT\WpfApplication2\bin\Debug\Microsoft.Dynamic.dll
 E:\KDT\WpfApplication2\bin\Debug\Microsoft.Scripting.Metadata.dll
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Com Debugger.exe.config
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger.exe
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger.pdb
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Com Debugger.exe.manifest
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Com Debugger.application
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Com Debugger.exe
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Com Debugger.pdb
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Microsoft.Dynamic.dll
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\Microsoft.Scripting.Metadata.dll
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\KDT.csprojResolveAssemblyReference.cache
@@ -61,10 +54,21 @@ C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\About.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\MainWindow.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\OptionWindow.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\App.g.cs
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger_Content.g.cs
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger_MarkupCompile.cache
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger.g.resources
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\COM_DEBUGGER.Properties.Resources.resources
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\KDT.csproj.GenerateResource.Cache
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger.exe.manifest
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\Com Debugger.application
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.exe.config
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.exe.manifest
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.application
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.exe
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.pdb
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\help_window.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger_Content.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger_MarkupCompile.cache
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger_MarkupCompile.lref
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\help_window.baml
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger.g.resources
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger.exe.manifest
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger.application
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger.exe
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Debug\ComDebugger.pdb

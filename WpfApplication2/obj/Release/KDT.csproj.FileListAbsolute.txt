@@ -30,10 +30,6 @@ C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\OptionWindow.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\App.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\COM_DEBUGGER.Properties.Resources.resources
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\KDT.csproj.GenerateResource.Cache
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Dynamic.dll
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Scripting.Metadata.dll
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\KDT.csprojResolveAssemblyReference.cache
-C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Yaml.dll
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\GeneratedInternalTypeHelper.g.cs
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe.config
 C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe.manifest
@@ -48,3 +44,14 @@ C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.exe.manifest
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.application
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.exe
 C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.pdb
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\help_window.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\help_window.baml
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Dynamic.dll
+C:\SourceCode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\KDT.csprojResolveAssemblyReference.cache
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\AutoCompleteTextBox.baml
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\AutoCompleteTextBox.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Evaluation.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\Evaluation.baml
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\UpdateCmd.g.cs
+C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\UpdateCmd.baml

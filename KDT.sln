@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KDT", "WpfApplication2\KDT.
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup2", "Setup2\Setup2.isproj", "{3A412EE4-3FC3-4311-9FF4-C050C24137BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crosswalk .NET Extensions Template1", "Crosswalk .NET Extensions Template1\Crosswalk .NET Extensions Template1.csproj", "{AF1DB500-38A9-4259-A266-592FA870162A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -38,16 +36,6 @@ Global
 		{3A412EE4-3FC3-4311-9FF4-C050C24137BC}.Release|Any CPU.Build.0 = SingleImage
 		{3A412EE4-3FC3-4311-9FF4-C050C24137BC}.SingleImage|Any CPU.ActiveCfg = SingleImage
 		{3A412EE4-3FC3-4311-9FF4-C050C24137BC}.SingleImage|Any CPU.Build.0 = SingleImage
-		{AF1DB500-38A9-4259-A266-592FA870162A}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1DB500-38A9-4259-A266-592FA870162A}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

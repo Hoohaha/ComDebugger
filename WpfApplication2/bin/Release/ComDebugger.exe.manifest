@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="252832">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="270752">
       <assemblyIdentity name="ComDebugger" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>soCCIym2KMoIZN5x1EDv2e4PRuA=</dsig:DigestValue>
+        <dsig:DigestValue>PP383IDE47yLntJvXlYvZ3lSVSw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -114,13 +114,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="ComDebugger.exe.config" size="199">
+  <file name="ComDebugger.exe.config" size="184">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>GppnRcd+1cjh7BZx3bL16S8kPdA=</dsig:DigestValue>
+      <dsig:DigestValue>06MAsbgFUGlKhu1U3KJ4fh8CRLU=</dsig:DigestValue>
     </hash>
   </file>
   <file name="interface\interface.py" size="452">
@@ -138,16 +138,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>hUzTGlAZ00HvP8rNjGu6ZkM65o4=</dsig:DigestValue>
-    </hash>
-  </file>
-  <file name="Yaml.dll" size="45056">
-    <hash>
-      <dsig:Transforms>
-        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-      </dsig:Transforms>
-      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>tR2n2Xt6t+ots4wkC6kMJeouaV4=</dsig:DigestValue>
+      <dsig:DigestValue>EibKNKeiHbc8CWZ4eleF1G4v+tY=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

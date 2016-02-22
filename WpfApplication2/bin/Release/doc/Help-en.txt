@@ -1,0 +1,30 @@
+	  Com Debugger Help
+
+1. SendBox Command:
+       cls  --- clear
+       clss --- clear all
+       cpld --- Enable "$"
+
+2. How to update KABS/CPLD commands?
+   Find the location of your app installed,
+   Example: C:/Programe files(x86)/ComDebugger/config/
+   The folder("config") is a git repo, you'd better to sync to update.
+
+   CPLD_COMMAND.ini         ----   cpld commands
+	$RST
+	$PWM		    ----   command
+	$New commnad
+
+   KABS_COMMNAD.ini         ----   kabs commands
+	[new module name]       ----   sorted by module
+	new command1
+	new command2            ----   command
+   Maybe you need to restart the application to reload the changes.
+
+
+3. What does 'View' button mean?
+   "view" button   --- view the files in Scripts list
+
+
+4. How can I add files?
+   Drag the file or a folder, or click "Files"/"Folder" to add.

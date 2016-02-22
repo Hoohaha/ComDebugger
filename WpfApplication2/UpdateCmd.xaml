@@ -1,0 +1,15 @@
+﻿<Window x:Class="COM_DEBUGGER.UpdateCmd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:COM_DEBUGGER"
+        mc:Ignorable="d"
+        Title="Update Command" Height="300" Width="400">
+    <Grid Background="#FF3E3E42">
+        <Button x:Name="OpenFileLocation" Content="Open File Location" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="120" Height="30" Click="OpenFileLocation_Click"/>
+        <TextBlock x:Name="textblock" Margin="5,5,5,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="179" Foreground="#FFFBFBFB" TextAlignment="Center"/>
+
+
+    </Grid>
+</Window>

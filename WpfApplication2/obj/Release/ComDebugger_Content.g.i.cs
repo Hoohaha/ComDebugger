@@ -9,6 +9,5 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("interface/interface.py")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("yaml.dll")]
 
 

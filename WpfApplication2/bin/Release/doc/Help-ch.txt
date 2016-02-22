@@ -1,0 +1,89 @@
+    关于Com Debugger的使用说明
+
+1. 为了方便使用，ComDebugger设置了一些常用命令：
+       cls    ---  清除当前窗口，效果同Clear Left/Clear Right一样
+       clss   ---  清除所有的窗口， 效果同Clear All一样
+       cpld   ---  使能CPLD “$"， 效果同Start '$'复选框一样
+
+2. 发送框的历史输入
+    ↑↓向上和向下键可以调出历史输入
+
+3. 如何添加脚本文件或文件夹
+   支持文件、文件夹拖拽；
+   通过”Files"或“Folder"按钮添加；
+
+4. 左侧默认为target，右侧默认为assistant，最右侧的命令列表只给assistant的串口发送。
+   命令列表的命令，双击即可执行。
+
+
+5. 怎样更新KABS/CPLD命令?
+   找到安装路径，例如 C:/Programe files(x86)/ComDebugger/
+   在config/目录下有两个文件:
+     CPLD_COMMAND.ini
+     KABS_COMMAND.ini
+   需要注意的是config目录是一个git repo，在更改前最好同步到最新。
+
+
+   CPLD_COMMAND.ini         ----   存储cpld命令的文件，每一行一个命令
+	$RST
+	$PWM		    ----   添加新的命令只需在文件末尾直接添加
+	$New commnad
+
+   KABS_COMMNAD.ini         ----   存储kabs命令的文件
+	[new module name]   ----   由模块分类，如果是新模块必须新建模块
+	new command1
+	new command2        ----   命令添加在模块的下面
+
+   更新完成后一定记得保存，确认无误后，同步到远端。
+   密码：ubuntu
+
+
+6. 'view'按钮的作用？
+   'view' 按钮可以查看选中的文件。
+   如果在Settings->options里面配置了第三方的文本编辑器，并且Enable是选中的，
+   则点击'view'可以在第三方文本编辑器中，查看并编辑该的文件。
+
+   支持大多数第三方编辑器，必须是可执行文件。
+   路径例如：C:\Program Files (x86)\Notepad++\notepad++.exe
+   
+
+   需要说明的是如果未配置editor path，则默认使用右边的区域显示文件，
+   该显示是只读方式，并不会对文件进行任何写操作。
+   不需要显示的时候清除即可。
+
+
+
+7. 如何自动匹配info.yml里面的pattern？
+   有两种方式：
+   1> 第一种 自动执行
+      将case的文件夹添加到Scripts的列表里面，点击Run，
+      程序会自动先去解析info.yml的信息，根据info.yml的信息，自动
+      执行assistant_init.py，interact.py,脚本执行完成之后，对log进行匹配。
+      这一点和freemv一样。
+   
+   2> 第二种 比较自由  属于单步执行
+      可以在Scripts的列表里面添加info.yml，或者python文件。
+
+      当选中文件为python脚本时，程序只会执行脚本。
+
+      当选中文件为yml文件时，只对两个窗口内容中只匹配pattern和no_pattern。
+
+
+8. 一些注意事项:
+   1> ComDebugger不能执行sai、power manager的交互脚本。
+   2> 在执行脚本过程中，不要随意插拔串口，如果这样做可能导致软件崩溃。
+
+
+9. 脚本运行原理：
+   内部集成IronPython部件，C#可以与IronPython进行实例传递。
+
+
+10. 高阶使用
+   interface/interface.py定义的串口类名为FREEMV和FREEMV_ASSISTANT，
+   如果需要作其他用，可以自定义名字，但不能更改SEND1(string)和SEND2(string)。
+
+
+
+
+
+

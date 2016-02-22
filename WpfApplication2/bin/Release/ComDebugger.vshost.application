@@ -11,18 +11,17 @@
     <deploymentProvider codebase="file://10.193.102.47/shareserver/IDE_Software/COM_DEBUGGER/ComDebugger.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
-    <framework targetVersion="4.0" profile="Client" supportedRuntime="4.0.30319" />
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="ComDebugger.exe.manifest" size="7920">
+    <dependentAssembly dependencyType="install" codebase="ComDebugger.exe.manifest" size="7551">
       <assemblyIdentity name="ComDebugger.exe" version="3.0.0.14" publicKeyToken="0000000000000000" language="en" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ehftGIZl/fN1W7iBFMSU8xbBUEY=</dsig:DigestValue>
+        <dsig:DigestValue>f3JQ/3XRGdTbJYScD+0phAudfnQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

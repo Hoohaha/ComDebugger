@@ -47,7 +47,10 @@ namespace COM_DEBUGGER
         {
             StringBuilder temp = new StringBuilder(255);
             int i = GetPrivateProfileString(Section, Key, "", temp, 255, path);
-            return temp.ToString();
+            if (i >= 1)
+                return temp.ToString();
+            else
+                return "";
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace COM_DEBUGGER
             values = new string[result.Count];
             for (int i = 0; i < result.Count; i++)
             {
-                string[] item = result[i].ToString().Split(new char[] { '=' });
+                string[] item = result[i].ToString().Split(new char[] { '=' },2);
                 if (item.Length == 2)
                 {
                     keys[i] = item[0].Trim();

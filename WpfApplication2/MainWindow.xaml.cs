@@ -14,6 +14,8 @@ using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Documents;
+using WPFAutoCompleteTextbox;
 
 namespace COM_DEBUGGER
 {
@@ -32,29 +34,48 @@ namespace COM_DEBUGGER
         private SolidColorBrush colorblack = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
         private SolidColorBrush colorred = new SolidColorBrush(Color.FromArgb(255, 255, 0,0));
 
-        private bool ScriptsRuningState = false;
+        
         private Thread ScriptsThread;
-        private string FilePath = string.Empty;
         private string VirtualPort = "Virtual";
+        private bool ScriptsRuningState = false;
         private bool FirstConfig = true;
-        private ObservableCollection<FileItem> ScriptsSource = new ObservableCollection<FileItem>();
-        ObservableCollection<CMDNode> CMDTree;
+        private bool TextMatchState = false;
+
+        private ObservableCollection<FileItem> ScriptsSource;
+        private ObservableCollection<CMDNode> CMDTree;
 
         delegate void HanderInterfaceUpdataDelegate();
-        
+
+        private string IniPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "app_info.ini";
+        private List<string> ScriptsRunQueue = new List<string>();
 
 
         public MainWindow()
         {
+            
             InitializeComponent();
-      
+
+            ScriptsSource = new ObservableCollection<FileItem>();
             sp1 = new Serial(getData1);
             sp2 = new Serial(getData2);
 
-            initial_combobox();
-            LoadCommandList();
-            addPortNames(comboBox_Ports1, comboBox_Ports2);
             ScriptsList.ItemsSource = ScriptsSource;
+
+            sendbox1.TextBoxObject.UndoLimit = 20;
+            sendbox2.TextBoxObject.UndoLimit = 20;
+            sendbox2.ComboBoxBackground = colorblack;
+
+            //initial port combobox
+            initial_combobox();
+
+            //load cpld command
+            LoadCPLDCommand();
+            //load kabs command
+            LoadKABSCommand();
+
+            //add ports from regex
+            addPortNames(comboBox_Ports1, comboBox_Ports2);
+
         }
 
 
@@ -240,7 +261,7 @@ namespace COM_DEBUGGER
         private void getData1( string data)
         {
 
-            textbox1.AppendText(data);
+            textbox1.AppendText(data);//AppendText(data);
             serial1.ScrollToEnd();
         }
 
@@ -253,25 +274,93 @@ namespace COM_DEBUGGER
 
         private void sendbox1_KeyDown(object sender, KeyEventArgs e)
         {
+            MenuItem ClearMenu;
+
             if (e.Key == Key.Enter)
             {
-                TextBox sendbox = (TextBox)sender;
-                Serial sp;
-                if (sendbox==sendbox1)
+                var sendbox = (AutoCompleteTextBox)sender;
+                string SendText = sendbox.Text;
+                sendbox.Text = string.Empty;
+
+                if (sendbox == sendbox1)
                 {
-                    sp = sp1;
+                    ClearMenu = ClearLMenu;
                 }
                 else
                 {
-                    sp = sp2;
+                    ClearMenu = ClearRMenu;
                 }
-                if (sp.IsOpening)
+
+                sendbox.IsSuggestionOpen = false;
+                sendbox.TextBoxFocus();
+
+                switch (SendText)
                 {
-                    sp.Send_Data(sendbox.Text);
-                    sendbox.Text = "";
+                    case "cls":
+                        ClearMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                        return;
+                    case "clss":
+                        ClearAllMenu1.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                        return;
+                    case "cpld":
+                        CPLD_Check.IsChecked = true;
+                        CPLD_Check.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+                        return;
+                }
+
+                if (sendbox == sendbox1)
+                {
+                    if (!sp1.IsOpening) return;
+                    sp1.Send_Data(SendText);
+                }
+                else
+                {
+                    if (!sp2.IsOpening) return;
+    
+                    //serail port2 send data    
+                    sp2.Send_Data(SendText);
+
+                    //clear sendbox2 Text
+                    if ((bool)CPLD_Check.IsChecked)
+                    {  
+                        //if cpld checked, text initial content is "$"
+                        sendbox2.Text = "$";
+                        sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
+                    }
+
                 }
             }
         }
+
+
+
+        private void sendbox2_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var sendbox = (AutoCompleteTextBox)sender;
+            if  (e.Key == Key.Down)
+            {
+                if (sendbox.IsSuggestionOpen)
+                {
+                    sendbox.ComboBoxFocus();
+                }
+                else
+                {
+                    sendbox.TextBoxObject.Redo();
+                }
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (sendbox.TextBoxObject.IsFocused)
+                     sendbox.TextBoxObject.Undo();
+                
+            }
+            else if  (e.Key==Key.Right)
+            {
+                sendbox.IsSuggestionOpen = false;
+            }
+        }
+
+
 
 
         public string ByteArrayToHexString(byte[] data)
@@ -290,80 +379,76 @@ namespace COM_DEBUGGER
         private void Clear_Serial1_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menu = (MenuItem)sender;
-            if (menu.Name == "Clear1")
-            {
-                textbox1.Text = "";
-            }
-            else
-            {
-                textbox2.Text = "";
-            }
-        }
-
-        private void SelectAll_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menu = (MenuItem)sender;
-            if (menu.Name == "SelectAll1")
-            {
-                textbox1.SelectAll();
-            }
-            else
-            {
-                textbox2.SelectAll();
-            }
-        }
-
-        private void Copy_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menu = (MenuItem)sender;
-            if (menu.Name == "Copy1")
-            {
-                textbox1.Copy();
-            }
-            else
-            {
-                textbox2.Copy();
-            }
             
+            if (menu.Header.ToString() == "Clear Left")
+            {
+                Paragraph paraa = new Paragraph();
+                textbox1.Document.Blocks.Clear();
+                textbox1.Document.Blocks.Add(paraa);
+            }
+            else
+            {
+                Paragraph parab = new Paragraph();
+                textbox2.Document.Blocks.Clear();
+                textbox2.Document.Blocks.Add(parab);
+            }
         }
+
+
         private void Clear_All_Click(object sender, RoutedEventArgs e)
         {
-            textbox1.Text = "";
-            textbox2.Text = "";
+            Paragraph paraa = new Paragraph();
+            Paragraph parab = new Paragraph();
+            textbox1.Document.Blocks.Clear();
+            textbox1.Document.Blocks.Add(paraa);
+
+            textbox2.Document.Blocks.Clear();
+            textbox2.Document.Blocks.Add(parab);
         }
         #endregion
 
 
 
         #region Python Script Operation
-
         private void ListBox_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                foreach (string s in files)
+                foreach (string p in files)
                 {
-                    AddItemToScriptSource(s);
+                    ScriptsSource.Add(new FileItem(p));
                 }
             }
         }
 
         private void ADDButton_Click(object sender, RoutedEventArgs e)
         {
+            ADDButton.Focusable = false;
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Python(*.py)|*.py|All files (*.*)|*.*";
+            dialog.Multiselect = true;
+            //dialog.Filter = "Python(*.py)|*.py|YML(*.yml)|*.yml|All files (*.*)|*.*";
             if (dialog.ShowDialog() == true)
             {
-                AddItemToScriptSource(dialog.FileName);
+                foreach(string p in dialog.FileNames)
+                {
+                    ScriptsSource.Add(new FileItem(p));
+                }
             }
         }
 
-        private void AddItemToScriptSource(string filepath)
+        private void AddFolder_Click(object sender, RoutedEventArgs e)
         {
-            ScriptsSource.Add(new FileItem(filepath));
+            AddFolder.Focusable = false;
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            fbd.ShowDialog();
+            if (fbd.SelectedPath != string.Empty)
+            {
+                ScriptsSource.Add(new FileItem(fbd.SelectedPath));
+            }
         }
+
 
         private void RUNButton_Click(object sender, RoutedEventArgs e)
         {
@@ -378,12 +463,66 @@ namespace COM_DEBUGGER
             }
         }
 
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewButton.Focusable = false;
+            if (ScriptsList.SelectedIndex == -1)
+            {
+                MessageBox.Show("No file is selected!");
+                return;
+            }
+            string EditorPath = string.Empty;
+            string filepath = (string)ScriptsList.SelectedValue;
+            string EnableFlag = IniOperations.Read("editor", "enable", "config/conf.ini");
+            if (EnableFlag == "1")
+            {
+                EditorPath = IniOperations.Read("editor", "path", "config/conf.ini");
+                if ((Path.GetExtension(EditorPath)==".exe")&&(File.Exists(EditorPath)))
+                {
+                    Process GProcess = new Process();
+                    GProcess.StartInfo.FileName = EditorPath;
+                    GProcess.StartInfo.Arguments = filepath;
+                    GProcess.StartInfo.UseShellExecute = false;
+                    GProcess.Start();
+                }
+                else
+                {
+                    MessageBox.Show("Editor path is invalid, please config the right value in Options panel!");
+                }
+
+            }
+            else
+            {
+                LoadTextFile(textbox2, filepath);
+            }
+        }
+
+        private void LoadTextFile(RichTextBox richTextBox, string filename)
+        {
+            richTextBox.Document.Blocks.Clear();
+            using (StreamReader streamReader = File.OpenText(filename))
+            {
+                Paragraph paragraph = new Paragraph(new Run(streamReader.ReadToEnd()));
+                richTextBox.Document.Blocks.Add(paragraph);
+            }
+        }
+
         private void ScriptsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (this.ScriptsList.SelectedItem != null)
             {
                 Scripts_run();
             }
+        }
+        private void YamlPaserProcess(string YamlPath)
+        {
+            Process GProcess = new Process();
+            GProcess.StartInfo.FileName = @"python ";
+            GProcess.StartInfo.Arguments = @"interface/YamlPaser.py " + YamlPath;
+            GProcess.StartInfo.UseShellExecute = false;
+            GProcess.StartInfo.CreateNoWindow = true;
+            GProcess.Start();
+            GProcess.WaitForExit();
         }
 
         private void Scripts_run()
@@ -396,7 +535,53 @@ namespace COM_DEBUGGER
                    if (res != MessageBoxResult.Yes)
                        return;
                 }
-                FilePath = (string)ScriptsList.SelectedValue;
+
+                string CurrentPath = (string)ScriptsList.SelectedValue;
+                ScriptsRunQueue.Clear();
+                if ( Directory.Exists(CurrentPath))
+                {
+                    Paragraph paraa = new Paragraph();
+                    textbox1.Document.Blocks.Clear();
+                    textbox1.Document.Blocks.Add(paraa);
+
+                    Paragraph parab = new Paragraph();
+                    textbox2.Document.Blocks.Clear();
+                    textbox2.Document.Blocks.Add(parab);
+
+                    string infopath = CurrentPath + "/info.yml";
+                    if (File.Exists(infopath))
+                    {
+                        YamlPaserProcess(infopath);
+                        TextMatchState = true;
+
+                        string assistant_init = IniOperations.Read("others", "assistant_init", IniPath);
+                        if (assistant_init == "1")
+                        {
+                            string assistant_init_path = CurrentPath + "/assistant_init.py";
+                            if (File.Exists(assistant_init_path))
+                            {
+                                ScriptsRunQueue.Add(assistant_init_path);
+                            }
+                        }
+                        string interact_path = CurrentPath + "/interact.py";
+                        if (File.Exists(interact_path))
+                        {
+                            ScriptsRunQueue.Add(interact_path);
+                        }
+                    }
+                }
+                else if (Path.GetExtension(CurrentPath)==".yml")
+                {
+                    YamlPaserProcess(CurrentPath);
+                    TextMatch();
+                    return;
+                }
+                else
+                {
+                    ScriptsRunQueue.Add(CurrentPath);
+                    
+                }
+                
                 ScriptsThread = new Thread(exectue_py);
                 ScriptsThread.Start();
                 ScriptsList.IsEnabled = false;
@@ -418,96 +603,122 @@ namespace COM_DEBUGGER
 
         private void EnableToolBoxs()
         {
+            while (true)
+            {
+                if (MessageBox.Show("Finished!") == MessageBoxResult.OK)
+                    break;
+            }
+
             ScriptsList.IsEnabled = true;
             Op_Button1.IsEnabled = true;
             Op_Button2.IsEnabled = true;
             RefreshButton.IsEnabled = true;
-            RUNButton.Content = "RUN";
+            RUNButton.Content = "Run";
             RUNButton.Background = colorwhite;
             RUNButton.Foreground = colorblack;
         }
 
         private void TextMatch()
         {
-            string[] keys = new string[20];
-            string[] values = new string[20];
+            FlowDocument mcFlowDoc = new FlowDocument();
+            string[] keys = new string[50];
+            string[] values = new string[50];
             bool r = false;
             Regex Pattern;
 
-            string AppPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            string IniPath = AppPath + "/abc.ini";
+            StringBuilder TextTemp = new StringBuilder();
+            TextRange textRange = new TextRange(textbox1.Document.ContentStart,textbox1.Document.ContentEnd);
+            TextTemp.Append(textRange.Text);
+            textRange = new TextRange(textbox2.Document.ContentStart, textbox2.Document.ContentEnd);
+            TextTemp.Append(textRange.Text);
 
-            string dirpath = Path.GetDirectoryName(FilePath);
-            Process GProcess = new Process();
+            Paragraph para = new Paragraph();
+            para.Foreground = new SolidColorBrush(Color.FromArgb(255, 108, 68, 68));
+            var Title = new Run("=====================================\r\n--------- Match Result -------\r\n");
+            para.Inlines.Add(Title);
+            para.Inlines.Add(new Run("Expect Pattern:\r\n"));
 
-            GProcess.StartInfo.FileName = @"python ";
-            GProcess.StartInfo.Arguments = @"interface/test.py " + dirpath + "/info.yml";
-            GProcess.StartInfo.UseShellExecute = false;
-            GProcess.StartInfo.CreateNoWindow = true;
-            GProcess.Start();
-            GProcess.WaitForExit();
+            //Get Pattern
+            IniOperations.GetAllKeyValues("pattern", out keys, out values, IniPath);
 
-
-            IniOperations.GetAllKeyValues("pattern", out keys,out values, IniPath);
-            
-            foreach (string t in values)
+            foreach (string pa in values)
             {
-                textbox1.AppendText(t);
-                Pattern = new Regex(t);
-                r = Pattern.IsMatch(textbox1.Text);
+                Pattern = new Regex(pa);
+                r = Pattern.IsMatch(TextTemp.ToString());
+
                 if (r)
-                    MessageBox.Show("YES");
+                {
+                    var run = new Run("   " + pa + "   Match\r\n");
+                    run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
+                    para.Inlines.Add(run);
+                }
                 else
-                    MessageBox.Show("No");
+                {
+                    var run = new Run("   " + pa + "   Failed to Match\r\n");
+                    run.Foreground = colorred;
+                    para.Inlines.Add(run);
+                }
             }
 
+            //Get No Pattern
+            para.Inlines.Add(new Run("Expect No Pattern:\r\n"));
             IniOperations.GetAllKeyValues("no_pattern", out keys, out values, IniPath);
-            foreach (string t in values)
+
+            foreach (string npa in values)
             {
-                textbox1.AppendText(t);
-                Pattern = new Regex(t);
-                r = Pattern.IsMatch(textbox1.Text);
+                Pattern = new Regex(npa);
+                r = Pattern.IsMatch(TextTemp.ToString());
+
                 if (r)
-                    MessageBox.Show("No");
+                {
+                    var run = new Run("   " + npa + "   Appear\r\n");
+                    run.Foreground = colorred;
+                    para.Inlines.Add(run);
+                }
                 else
-                    MessageBox.Show("Yes");
+                {
+                    var run = new Run("   " + npa + "   Not Appear\r\n");
+                    run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
+                    para.Inlines.Add(run);
+                }
             }
+            textbox2.Document.Blocks.Add(para);
+            TextMatchState = false;
         }
 
         private void exectue_py()
         {
-            ScriptsRuningState = true;
             HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
             HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
 
-            string PythonPath = string.Empty;
-            string PythonLibPath1 = string.Empty;
-            string PythonLibPath2 = string.Empty;
-            StreamReader file = new StreamReader("config/python_config.ini", Encoding.Default);
-            PythonPath = file.ReadLine();
-            PythonLibPath1 = file.ReadLine();
-            PythonLibPath2 = file.ReadLine();
-            file.Close();
+            string PythonPath = IniOperations.Read("python", "python_path", "config/conf.ini");
+            string PythonLibPath1 = IniOperations.Read("python", "python_lib1", "config/conf.ini");
+            string PythonLibPath2 = IniOperations.Read("python", "python_lib2", "config/conf.ini");
+            ScriptEngine engine;
 
             //init serial state
-            sp1.SendNewLineIsEnabled = false;
-            sp1.SendNewLineIsEnabled = false;
-            sp1.IsScriptRun = true;
-            sp2.IsScriptRun = true;
+            ScriptsRuningState = true;
 
             //init python environment
-            ScriptEngine engine = Python.CreateEngine();
+            try
+            {
+                 engine = Python.CreateEngine();
+            }
+            catch
+            {
+                return;
+            }
             var PythonLibPaths = engine.GetSearchPaths();
-            if (PythonPath!=string.Empty)
+            if (Directory.Exists(PythonPath))
             {
                 PythonLibPaths.Add(PythonPath+"/Lib/");
                 PythonLibPaths.Add(PythonPath+"/Lib/site-packages/");
             }
-            if (PythonLibPath1 != string.Empty)
+            if (Directory.Exists(PythonLibPath1))
             {
                 PythonLibPaths.Add(PythonLibPath1);
             }
-            if (PythonLibPath2 != string.Empty)
+            if (Directory.Exists(PythonLibPath2))
             {
                 PythonLibPaths.Add(PythonLibPath2);
             }
@@ -515,31 +726,35 @@ namespace COM_DEBUGGER
             ScriptScope scope = engine.CreateScope();
             scope.SetVariable("SEND1", (Action<string>)sp1.Send_Data);
             scope.SetVariable("SEND2", (Action<string>)sp2.Send_Data);
-            scope.SetVariable("ScriptPath", FilePath);
-            ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
-            try
+            foreach(string file in ScriptsRunQueue)
             {
-                //run
-                var result = script.Execute(scope);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message != "Thread was being aborted.")
+                scope.SetVariable("ScriptPath", file);
+                ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
+                try
                 {
-                    string ErrorMessage = "Error: " + FilePath + "\r\n  " + ex.Message;
-                    MessageBox.Show(ErrorMessage);
+                    var result = script.Execute(scope);//run
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message != "Thread was being aborted.")
+                    {
+                        string ErrorMessage = "Error: " + file + "\r\n  " + ex.Message;
+                        MessageBox.Show(ErrorMessage);
+                    }
                 }
             }
             //Match regular
-            Dispatcher.Invoke(DeleTextMatch);
+            if (TextMatchState)
+            {
+                Dispatcher.Invoke(DeleTextMatch);
+            }
+
             //enable tool box
             Dispatcher.Invoke(DeleEnableToolBox);
             //recover serail state
             ScriptsRuningState = false;
-            sp1.SendNewLineIsEnabled = false;
-            sp1.SendNewLineIsEnabled = false;
-            sp1.IsScriptRun = false;
-            sp2.IsScriptRun = false;
+
+
         }
         #endregion
 
@@ -738,7 +953,7 @@ namespace COM_DEBUGGER
             comboBox_Ports2.IsEnabled = true;
         }
 
-        private void LoadCommandList()
+        private void LoadCPLDCommand()
         {
             StreamReader file;
             file = new StreamReader("config/CPLD_COMMAND.ini", Encoding.Default);
@@ -747,12 +962,44 @@ namespace COM_DEBUGGER
             {
                 s = file.ReadLine();
                 if (!string.IsNullOrEmpty(s))
+                {
                     CPLDList.Items.Add(s);
+                    sendbox2.AddItem(s);
+                }
+                    
             }
             file.Close();
-
-
         }
+
+        private void LoadKABSCommand()
+        {
+            TreeViewItem item = new TreeViewItem();
+
+            string[] keys = new string[50];
+            string[] values = new string[50];
+            string[] sections = new string[100];
+
+            CMDTree = new ObservableCollection<CMDNode>();
+
+            IniOperations.GetAllSectionNames(out sections, "config/KABS_COMMAND.ini");
+
+            int i = 0, j = 0;
+
+            for (i = 0; i < sections.Length; i++)
+            {
+                IniOperations.GetAllKeyValues(sections[i], out keys, out values, "config/KABS_COMMAND.ini");
+                CMDNode node = new CMDNode() { NodeName = sections[i], ID = 1 };
+                for (j = 0; j < keys.Length; j++)
+                {
+                    node.NextNode.Add(new CMDNode { NodeName = keys[j], ID = 2 });
+                    sendbox2.AddItem(keys[j]);
+                }
+
+                CMDTree.Add(node);
+            }
+            treeView.ItemsSource = CMDTree;
+        }
+
 
         private void CommandList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -773,7 +1020,7 @@ namespace COM_DEBUGGER
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void About_Click(object sender, RoutedEventArgs e)
@@ -787,7 +1034,7 @@ namespace COM_DEBUGGER
         private void SendNewLineChecked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = (CheckBox)sender;
-            bool state = CheckReseult(checkbox);
+            bool state = (bool)(checkbox.IsChecked);
             if (sp1 == null)
                 return;
             if (checkbox==NewLineCheck1)
@@ -800,42 +1047,6 @@ namespace COM_DEBUGGER
             }
         }
 
-        private bool CheckReseult(CheckBox checkbox)
-        {
-
-            if ((bool)(checkbox.IsChecked))
-                return true;
-            return false;
-        }
-
-        private void treeView_Loaded(object sender, RoutedEventArgs e)
-        {
-            var tree = sender as TreeView;
-            TreeViewItem item = new TreeViewItem();
-            
-            string[] keys = new string[10];
-            string[] values = new string[10];
-            string[] sections = new string[100];
-
-           CMDTree = new ObservableCollection<CMDNode>();
-
-            IniOperations.GetAllSectionNames(out sections, "config/KABS_COMMAND.ini");
-            
-            int i = 0, j =0;
-            
-            for(i=0;i<sections.Length;i++)
-            {
-                IniOperations.GetAllKeyValues(sections[i], out keys, out values, "config/KABS_COMMAND.ini");
-                CMDNode node = new CMDNode() { NodeName=sections[i], ID=1};
-                for(j=0;j<keys.Length;j++)
-                {
-                    node.NextNode.Add(new CMDNode { NodeName = keys[j], ID=2});
-                 }
-                
-                CMDTree.Add(node);
-            }
-            tree.ItemsSource = CMDTree;
-        }
 
 
         private void treeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -847,13 +1058,78 @@ namespace COM_DEBUGGER
                 if (item.ID == 2)
                     sp2.Send_Data(item.NodeName);
             }
-            catch(Exception ex)
+            catch
             { }
         }
 
+
+
         private void Help_Click(object sender, RoutedEventArgs e)
         {
+            Help_window Hw = new Help_window();
+            Hw.Show();
+        }
 
+
+
+        private void ScriptsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string p = (string)ScriptsList.SelectedValue;
+            if (File.Exists(p))
+            {
+                ViewButton.IsEnabled = true;
+                if(Path.GetExtension(p)==".yml")
+                {
+                    RUNButton.Content = "Match";
+                }
+                else
+                {
+                    RUNButton.Content = "Run";
+                }
+                   
+            }
+            else
+            {
+                ViewButton.IsEnabled = false;
+                RUNButton.Content = "Run";
+            }
+                
+        }
+
+        private void CPLD_Check_Click(object sender, RoutedEventArgs e)
+        {
+            var checkbox = (CheckBox)sender;
+            string temp = string.Empty;
+
+            if ((bool)checkbox.IsChecked)
+            {
+                if (sendbox2.Text.StartsWith("$")) return;
+
+                temp = "$" + sendbox2.Text;
+                sendbox2.Text = temp;
+                sendbox2.TextBoxObject.Select(sendbox2.Text.Length,0);
+            }
+            else
+            {
+                if (sendbox2.Text.StartsWith("$"))
+                {
+                    temp = sendbox2.Text;
+                    sendbox2.Text = Regex.Replace(temp , @"\$","");
+                    sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
+                }
+            }
+        }
+
+        private void Evaluation_Click(object sender, RoutedEventArgs e)
+        {
+            Evaluation ew = new Evaluation();
+            ew.ShowDialog();
+        }
+
+        private void UpdateCommands_Click(object sender, RoutedEventArgs e)
+        {
+            string configpath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "config";
+            Process.Start("explorer.exe ", configpath);
         }
     }
 
@@ -966,9 +1242,8 @@ namespace COM_DEBUGGER
             {
                 n = BytesToRead;
                 buf = new byte[n];
-                this.Read(buf, 0, n);
-
-                string abc = System.Text.Encoding.Default.GetString(buf);
+                Read(buf, 0, n);
+                string abc =Encoding.Default.GetString(buf);
                 Thread.Sleep(20);
                 panel.Dispatcher.BeginInvoke(DisplayHandle, new string[] { abc });
             }
@@ -979,27 +1254,20 @@ namespace COM_DEBUGGER
         {
             try
             {
-                if (SendNewLineState)
-                {
-                    if(strSend.IndexOf("\r\n")<0)
-                        strSend += "\r\n";
+                if ((SendNewLineState)&&(strSend.IndexOf("\r\n")<0))
+                { 
+                    strSend += "\r\n";
                 }
+                //virtual send
                 if (VirtualOpen)
                 {
                     panel.Dispatcher.Invoke(DisplayHandle, new string[] { strSend });
                     return;
                 }
-                else if (SCRIPTRUN)
-                {
-                    this.Write(strSend);
-                    panel.Dispatcher.Invoke(DisplayHandle, new string[] { strSend });
-                }
                 else
                 {
-                    this.Write(strSend);
+                    Write(strSend);
                 }
-                
-                
             }
             catch (Exception e)
             {
@@ -1019,7 +1287,7 @@ namespace COM_DEBUGGER
            
             string[] elements = Regex.Split(path, @"\\");
             int l = elements.Length;
-            _FileName = string.Format("{0} - {1}",elements[l - 1], elements[l - 2]);
+            _FileName = string.Format("{0} - {1}",elements[l - 2], elements[l - 1]);
             _FilePath = path;
             _DirName = Path.GetDirectoryName(path);
         }
