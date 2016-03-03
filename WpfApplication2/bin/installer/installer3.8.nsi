@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "ComDebugger"
-!define PRODUCT_VERSION "V3.8"
+!define PRODUCT_VERSION "3.8"
 !define PRODUCT_PUBLISHER "NXP, Inc."
 !define PRODUCT_WEB_SITE "http://www.NXP.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\ComDebugger.exe"
@@ -14,9 +14,9 @@
 !include "MUI.nsh"
 
 ; MUI Settings
-!define MUI_ABORTWARNING
-!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
+;!define MUI_ABORTWARNING
+;!define MUI_ICON "..\..\logo.ico"
+;!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -56,6 +56,7 @@ ShowUnInstDetails show
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite try
+  File "..\Comdebugger_V3.8\app_info.ini"
   File "..\Comdebugger_V3.8\ComDebugger.exe"
   SetOutPath "$INSTDIR\config\.git"
   File "..\Comdebugger_V3.8\config\.git\COMMIT_EDITMSG"
@@ -125,18 +126,21 @@ Section "MainSection" SEC01
   File "..\Comdebugger_V3.8\config\.git\refs\remotes\origin\HEAD"
   File "..\Comdebugger_V3.8\config\.git\refs\remotes\origin\master"
   SetOutPath "$INSTDIR\config"
+  File "..\Comdebugger_V3.8\config\conf.ini"
   File "..\Comdebugger_V3.8\config\CPLD_COMMAND.ini"
   File "..\Comdebugger_V3.8\config\KABS_COMMAND.ini"
-  File "..\Comdebugger_V3.8\config\python_config.ini"
+  SetOutPath "$INSTDIR\doc"
+  File "..\Comdebugger_V3.8\doc\Help-ch.txt"
+  File "..\Comdebugger_V3.8\doc\Help-en.txt"
   SetOutPath "$INSTDIR\interface"
   File "..\Comdebugger_V3.8\interface\interface.py"
+  File "..\Comdebugger_V3.8\interface\YamlPaser.py"
   SetOutPath "$INSTDIR"
   File "..\Comdebugger_V3.8\IronPython.dll"
   File "..\Comdebugger_V3.8\IronPython.Modules.dll"
   File "..\Comdebugger_V3.8\Microsoft.Dynamic.dll"
   File "..\Comdebugger_V3.8\Microsoft.Scripting.dll"
   File "..\Comdebugger_V3.8\Microsoft.Scripting.Metadata.dll"
-  File "..\Comdebugger_V3.8\Yaml.dll"
 
 ; Shortcuts
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
@@ -180,16 +184,18 @@ Section Uninstall
   !insertmacro MUI_STARTMENU_GETFOLDER "Application" $ICONS_GROUP
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
-  Delete "$INSTDIR\Yaml.dll"
   Delete "$INSTDIR\Microsoft.Scripting.Metadata.dll"
   Delete "$INSTDIR\Microsoft.Scripting.dll"
   Delete "$INSTDIR\Microsoft.Dynamic.dll"
   Delete "$INSTDIR\IronPython.Modules.dll"
   Delete "$INSTDIR\IronPython.dll"
+  Delete "$INSTDIR\interface\YamlPaser.py"
   Delete "$INSTDIR\interface\interface.py"
-  Delete "$INSTDIR\config\python_config.ini"
+  Delete "$INSTDIR\doc\Help-en.txt"
+  Delete "$INSTDIR\doc\Help-ch.txt"
   Delete "$INSTDIR\config\KABS_COMMAND.ini"
   Delete "$INSTDIR\config\CPLD_COMMAND.ini"
+  Delete "$INSTDIR\config\conf.ini"
   Delete "$INSTDIR\config\.git\refs\remotes\origin\master"
   Delete "$INSTDIR\config\.git\refs\remotes\origin\HEAD"
   Delete "$INSTDIR\config\.git\refs\heads\master"
@@ -233,6 +239,7 @@ Section Uninstall
   Delete "$INSTDIR\config\.git\config"
   Delete "$INSTDIR\config\.git\COMMIT_EDITMSG"
   Delete "$INSTDIR\ComDebugger.exe"
+  Delete "$INSTDIR\app_info.ini"
 
   Delete "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
   Delete "$SMPROGRAMS\$ICONS_GROUP\Website.lnk"
@@ -241,6 +248,7 @@ Section Uninstall
 
   RMDir "$SMPROGRAMS\$ICONS_GROUP"
   RMDir "$INSTDIR\interface"
+  RMDir "$INSTDIR\doc"
   RMDir "$INSTDIR\config\.git\refs\remotes\origin"
   RMDir "$INSTDIR\config\.git\refs\heads"
   RMDir "$INSTDIR\config\.git\objects\pack"

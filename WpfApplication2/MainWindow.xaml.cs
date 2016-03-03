@@ -120,21 +120,21 @@ namespace COM_DEBUGGER
                 cbox2.Items.Add(s);
                 PortListBox.Items.Add(s);
             }
-            if(PortListBox.Items.Count==0)
-            {
+            //if(PortListBox.Items.Count==0)
+            //{
                 cbox1.SelectedIndex = 0;
                 cbox2.SelectedIndex = 0;
-            }
-            else if (PortListBox.Items.Count==1)
-            {
-                cbox1.SelectedIndex = 1;
-                cbox2.SelectedIndex = 0;
-            }
-            else if (PortListBox.Items.Count>=2)
-            {
-                cbox1.SelectedIndex = 1;
-                cbox2.SelectedIndex = 2;
-            }
+            //}
+            //else if (PortListBox.Items.Count==1)
+            //{
+            //    cbox1.SelectedIndex = 1;
+            //    cbox2.SelectedIndex = 0;
+            //}
+            //else if (PortListBox.Items.Count>=2)
+            //{
+            //    cbox1.SelectedIndex = 1;
+            //    cbox2.SelectedIndex = 2;
+            //}
 
             return true;
         }
