@@ -688,6 +688,7 @@ namespace COM_DEBUGGER
 
         private void exectue_py()
         {
+
             HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
             HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
 

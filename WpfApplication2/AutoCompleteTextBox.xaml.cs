@@ -52,6 +52,7 @@ namespace WPFAutoCompleteTextbox
             comboBox.IsTabStop = false;
             comboBox.SelectionChanged += new SelectionChangedEventHandler(comboBox_SelectionChanged);
 
+
             textBox = new TextBox();
             textBox.TextChanged += new TextChangedEventHandler(textBox_TextChanged);
             textBox.VerticalContentAlignment = VerticalAlignment.Center;
