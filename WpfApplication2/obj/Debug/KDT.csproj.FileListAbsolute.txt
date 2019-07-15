@@ -77,8 +77,6 @@ C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.exe.manifest
 C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.application
 C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.exe
 C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\ComDebugger.pdb
-C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\Microsoft.Dynamic.dll
-C:\Mycode\ComDebugger\WpfApplication2\bin\Debug\Microsoft.Scripting.Metadata.dll
 C:\Mycode\ComDebugger\WpfApplication2\obj\Debug\KDT.csprojResolveAssemblyReference.cache
 C:\Mycode\ComDebugger\WpfApplication2\obj\Debug\About.baml
 C:\Mycode\ComDebugger\WpfApplication2\obj\Debug\AutoCompleteTextBox.baml

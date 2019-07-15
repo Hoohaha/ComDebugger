@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="269824">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="270848">
       <assemblyIdentity name="ComDebugger" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>NvCwG5Ys2chtPbOe+BEe5B3u8U4=</dsig:DigestValue>
+        <dsig:DigestValue>r0NF32uRL89LQRuxAHMD6hHsi2g=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

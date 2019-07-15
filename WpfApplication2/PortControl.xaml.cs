@@ -20,6 +20,55 @@ using System.Threading;
 
 namespace COM_DEBUGGER
 {
+
+    class StringTool
+    {
+        public static string Hex2String(string hex)
+        {
+
+            string hexstring = hex.Replace("\r\n", String.Empty);
+            byte[] bytes = new byte[hexstring.Length / 2];
+
+            try
+            {
+                if (hexstring == "")
+                {
+                    return "";
+                }
+                for (var i = 0; i < bytes.Length; i++)
+                {
+                    bytes[i] = Convert.ToByte(hexstring.Substring(i * 2, 2), 16);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Failed to convert HEX to normal string, invalid encoding!");
+                return "";
+            }
+
+            return Encoding.ASCII.GetString(bytes);
+        }
+
+        public static string String2Hex(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var bytes = Encoding.Unicode.GetBytes(str);
+            foreach (var t in bytes)
+            {
+                if (t == 0)
+                {
+                    continue;
+                }
+                sb.Append(t.ToString("X2"));
+            }
+            //sb.Append("\r\n");
+
+            return sb.ToString();
+        }
+    }
+
+
     /// <summary>
     /// Interaction logic for PortControl.xaml
     /// </summary>
@@ -92,6 +141,11 @@ namespace COM_DEBUGGER
             button.Focusable = false;
         }
 
+        public bool HexDisplay
+        {
+            get;
+            set;
+        }
 
         public bool SendNewLine
         {
@@ -103,6 +157,23 @@ namespace COM_DEBUGGER
         {
             get { return Open_Button; }
             set { Open_Button = value; }
+        }
+
+
+        public void ShowHexString(bool tohex)
+        {
+            string text = new TextRange(DisplayBox.Document.ContentStart, DisplayBox.Document.ContentEnd).Text;
+            string s;
+            if (tohex)
+            {
+                s = StringTool.String2Hex(text);
+            }
+            else
+            {
+                s = StringTool.Hex2String(text);
+            }
+            DisplayBox.Document.Blocks.Clear();
+            DisplayBox.AppendText(s);
         }
 
 

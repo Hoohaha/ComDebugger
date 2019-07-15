@@ -307,6 +307,7 @@
                 <!--<CheckBox x:Name="CPLD_Check" Content="Start '$'" HorizontalAlignment="Left" Foreground="White" Background="White" Click="CPLD_Check_Click"/>-->
                 <CheckBox x:Name="NewLineCheck2" Content="End '\r\n'" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Click="SendNewLineChecked" Background="White" BorderBrush="#FF3F3F46" Padding="0" IsChecked="True"/>
                 <MenuItem x:Name="SendBreakMenu2" Header="Send Break" Click="SendBreak_Click"/>
+                <CheckBox x:Name="HexDisplay" Content="Hex" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Click="HexDisplayChecked" Background="White" BorderBrush="#FF3F3F46" Padding="0"/>
             </Menu>
         </ToolBarPanel>
         <ToolBarPanel x:Name="ToolBar1" Margin="0" Grid.Row="1">
@@ -315,6 +316,7 @@
                 <MenuItem x:Name="ClearAllMenu1" Header="Clear All" Click="Clear_All_Click"/>
                 <CheckBox x:Name="NewLineCheck1" Content="End '\r\n'" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Foreground="White" Click="SendNewLineChecked" Background="White" BorderBrush="#FF3F3F46" Padding="0" IsChecked="True"/>
                 <MenuItem x:Name="SendBreakMenu" Header="Send Break" Click="SendBreak_Click"/>
+                <CheckBox x:Name="HexDisplay1" Content="Hex" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Click="HexDisplayChecked" Background="White" BorderBrush="#FF3F3F46" Padding="0"/>
             </Menu>
         </ToolBarPanel>
         <local:PortControl x:Name="SP1" Grid.Row="2" Margin="0,0,2,0"></local:PortControl>

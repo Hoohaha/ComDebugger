@@ -312,6 +312,21 @@ namespace COM_DEBUGGER
         }
 
 
+        private void HexDisplayChecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkbox = (CheckBox)sender;
+            bool state = (bool)(checkbox.IsChecked);
+
+            if (checkbox.Name.Contains("1"))
+            {
+                SP1.ShowHexString(state);
+            }
+            else
+            {
+                SP2.ShowHexString(state);
+            }
+        }
+
 
         private void treeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
