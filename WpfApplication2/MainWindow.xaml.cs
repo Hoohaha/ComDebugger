@@ -24,22 +24,13 @@ namespace COM_DEBUGGER
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Serial sp1;
-        private Serial sp2;
-        private PortConfig PortCfgInfo1 = new PortConfig();
+        private string VirtualPort = "Virtual";
         private PortConfig PortCfgInfo2 = new PortConfig();
 
-        private SolidColorBrush colorwhite = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-        private SolidColorBrush colorblue = new SolidColorBrush(Color.FromArgb(255, 56, 150, 212));
-        private SolidColorBrush colorblack = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-        private SolidColorBrush colorred = new SolidColorBrush(Color.FromArgb(255, 255, 0,0));
-
-        
-        private Thread ScriptsThread;
-        private string VirtualPort = "Virtual";
-        private bool ScriptsRuningState = false;
-        private bool FirstConfig = true;
-        private bool TextMatchState = false;
+        //private Thread ScriptsThread;
+        //private bool ScriptsRuningState = false;
+        //private bool FirstConfig = true;
+        //private bool TextMatchState = false;
 
         private ObservableCollection<FileItem> ScriptsSource;
         private ObservableCollection<CMDNode> CMDTree;
@@ -56,17 +47,8 @@ namespace COM_DEBUGGER
             InitializeComponent();
 
             ScriptsSource = new ObservableCollection<FileItem>();
-            sp1 = new Serial(getData1);
-            sp2 = new Serial(getData2);
 
-            ScriptsList.ItemsSource = ScriptsSource;
-
-            sendbox1.TextBoxObject.UndoLimit = 20;
-            sendbox2.TextBoxObject.UndoLimit = 20;
-            sendbox2.ComboBoxBackground = colorblack;
-
-            //initial port combobox
-            initial_combobox();
+            //ScriptsList.ItemsSource = ScriptsSource;
 
             //load cpld command
             LoadCPLDCommand();
@@ -74,8 +56,7 @@ namespace COM_DEBUGGER
             LoadKABSCommand();
 
             //add ports from regex
-            addPortNames(comboBox_Ports1, comboBox_Ports2);
-
+            addPortNames();
         }
 
 
@@ -103,262 +84,36 @@ namespace COM_DEBUGGER
         }
 
 
-        private bool addPortNames(ComboBox cbox1, ComboBox cbox2)
+        private bool addPortNames()
         {
             List<string> serialPorts = getValidSerialPorts();
             List<string> oldPorts = new List<string>();
-            cbox1.Items.Clear();
-            cbox2.Items.Clear();
+            SP1.ports_list.Clear();
+            SP2.ports_list.Clear();
             PortListBox.Items.Clear();
 
-            cbox1.Items.Add(VirtualPort);
-            cbox2.Items.Add(VirtualPort);
+            SP1.ports_list.Add(VirtualPort);
+            SP2.ports_list.Add(VirtualPort);
 
             foreach (string s in serialPorts)
             {
-                cbox1.Items.Add(s);
-                cbox2.Items.Add(s);
+                SP1.ports_list.Add(s);
+                SP2.ports_list.Add(s);
                 PortListBox.Items.Add(s);
             }
-            //if(PortListBox.Items.Count==0)
-            //{
-                cbox1.SelectedIndex = 0;
-                cbox2.SelectedIndex = 0;
-            //}
-            //else if (PortListBox.Items.Count==1)
-            //{
-            //    cbox1.SelectedIndex = 1;
-            //    cbox2.SelectedIndex = 0;
-            //}
-            //else if (PortListBox.Items.Count>=2)
-            //{
-            //    cbox1.SelectedIndex = 1;
-            //    cbox2.SelectedIndex = 2;
-            //}
-
+            SP1.PortsComboBox.SelectedIndex = 0;
+            SP2.PortsComboBox.SelectedIndex = 0;
             return true;
         }
 
-        private void initial_combobox()
-        {
-            List<int> baudrate_collection = new List<int>{2400, 4800, 9600, 19200, 38400, 57600, 115200};
-            List<int> databits_collection = new List<int> { 5, 6, 7, 8 };
-            List<string> stopbits_collection = new List<string> { "1", "1.5", "2"};
-            string[] ParityItemSource = System.Enum.GetNames(typeof(Parity));
-            string[] HandShakeItemSource = System.Enum.GetNames(typeof(Handshake));
-            //set items source
-            comboBox_BaudRate1.ItemsSource = baudrate_collection;
-            comboBox_Databits1.ItemsSource = databits_collection;
-            comboBox_StopBits1.ItemsSource = stopbits_collection;
-            comboBox_HandShake1.ItemsSource = HandShakeItemSource;
-            comboBox_Parity1.ItemsSource = ParityItemSource;
-            //init value
-            comboBox_Databits1.SelectedItem = 8;
-            comboBox_Parity1.SelectedItem = "None";
-            comboBox_StopBits1.SelectedItem = "1";
-            comboBox_HandShake1.SelectedItem = "None";
-            comboBox_Parity1.SelectedItem = "None";
-            comboBox_BaudRate1.SelectedItem = 115200;
-            //set items source
-            comboBox_BaudRate2.ItemsSource = baudrate_collection;
-            comboBox_Databits2.ItemsSource = databits_collection;
-            comboBox_StopBits2.ItemsSource = stopbits_collection;
-            comboBox_HandShake2.ItemsSource = HandShakeItemSource;
-            comboBox_Parity2.ItemsSource = ParityItemSource;
-            //init value
-            comboBox_Databits2.SelectedItem = 8;
-            comboBox_Parity2.SelectedItem = "None";
-            comboBox_StopBits2.SelectedItem = "1";
-            comboBox_HandShake2.SelectedItem = "None";
-            comboBox_Parity2.SelectedItem = "None";
-            comboBox_BaudRate2.SelectedItem = 115200;
-            FirstConfig = false;
 
-            NewLineCheck1.IsChecked = true;
-            NewLineCheck2.IsChecked = true;
-        }
+
         private void ClosePorts()
         {
-            Close_Serial1();
-            Close_Serial2();
+            SP1.Close_Port();
+            SP2.Close_Port();
         }
 
-        private void SetOpbuttonOpenState(Button button)
-        {
-            button.Background = colorwhite;
-            button.Content = "Open";
-            button.Foreground = colorblack;
-            button.Focusable = false;
-        }
-        private void SetOpbuttonCloseState(Button button)
-        {
-            button.Background = colorblue;
-            button.Content = "Close";
-            button.Foreground = colorwhite;
-            button.Focusable = false;
-        }
-        private void Button_Open1(object sender, RoutedEventArgs e)
-        {
-            Serial sp;
-            PortConfig PortCfgInfo;
-            Button button = (Button)sender;
-
-            if (button == Op_Button1)
-            {
-                sp = sp1;
-                PortCfgInfo = PortCfgInfo1;
-            }
-            else
-            {
-                sp = sp2;
-                PortCfgInfo = PortCfgInfo2;
-            }
-
-            if (sp.IsOpening)
-            {
-                //sp.ReceivedBytesThreshold = 4096;
-                sp.DataReceived -= new SerialDataReceivedEventHandler(sp.Data_Received);
-                sp.Closes();
-                SetOpbuttonOpenState(button);
-            }
-            else
-            {
-                if (PortCfgInfo.portname == null)
-                {
-                    MessageBox.Show("Please set Port!");
-                    return;
-                }
-                if (PortCfgInfo.baudrate == 0)
-                {
-                    MessageBox.Show("Please set BaudRate!");
-                    return;
-                }
-                sp.Config(PortCfgInfo);//config portname baudrate etc...
-                sp.ReceivedBytesThreshold = 1024;
-                sp.PanelObject = this;
-                sp.ReadTimeout = 300;
-                sp.WriteTimeout = 300;
-                sp.ReceivedBytesThreshold = 1;
-                sp.DtrEnable = true;
-                sp.RtsEnable = true;
-                sp.DataReceived += new SerialDataReceivedEventHandler(sp.Data_Received);
-                
-                try
-                {
-                    sp.Opens();
-                    SetOpbuttonCloseState(button);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                
-
-            }
-
-        }
-
-        private void getData1( string data)
-        {
-
-            textbox1.AppendText(data);//AppendText(data);
-            serial1.ScrollToEnd();
-        }
-
-        private void getData2(string data)
-        {
-            textbox2.AppendText(data);
-            serial2.ScrollToEnd();
-        }
-
-
-        private void sendbox1_KeyDown(object sender, KeyEventArgs e)
-        {
-            MenuItem ClearMenu;
-
-            if (e.Key == Key.Enter)
-            {
-                var sendbox = (AutoCompleteTextBox)sender;
-                string SendText = sendbox.Text;
-                sendbox.Text = string.Empty;
-
-                if (sendbox == sendbox1)
-                {
-                    ClearMenu = ClearLMenu;
-                }
-                else
-                {
-                    ClearMenu = ClearRMenu;
-                }
-
-                sendbox.IsSuggestionOpen = false;
-                sendbox.TextBoxFocus();
-
-                switch (SendText)
-                {
-                    case "cls":
-                        ClearMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-                        return;
-                    case "clss":
-                        ClearAllMenu1.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-                        return;
-                    case "cpld":
-                        CPLD_Check.IsChecked = true;
-                        CPLD_Check.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
-                        return;
-                }
-
-                if (sendbox == sendbox1)
-                {
-                    if (!sp1.IsOpening) return;
-                    sp1.Send_Data(SendText);
-                }
-                else
-                {
-                    if (!sp2.IsOpening) return;
-    
-                    //serail port2 send data    
-                    sp2.Send_Data(SendText);
-
-                    //clear sendbox2 Text
-                    if ((bool)CPLD_Check.IsChecked)
-                    {  
-                        //if cpld checked, text initial content is "$"
-                        sendbox2.Text = "$";
-                        sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
-                    }
-
-                }
-            }
-        }
-
-
-
-        private void sendbox2_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            var sendbox = (AutoCompleteTextBox)sender;
-            if  (e.Key == Key.Down)
-            {
-                if (sendbox.IsSuggestionOpen)
-                {
-                    sendbox.ComboBoxFocus();
-                }
-                else
-                {
-                    sendbox.TextBoxObject.Redo();
-                }
-            }
-            else if (e.Key == Key.Up)
-            {
-                if (sendbox.TextBoxObject.IsFocused)
-                     sendbox.TextBoxObject.Undo();
-                
-            }
-            else if  (e.Key==Key.Right)
-            {
-                sendbox.IsSuggestionOpen = false;
-            }
-        }
 
 
 
@@ -373,8 +128,6 @@ namespace COM_DEBUGGER
 
 
 
-
-
         #region MenuItem_Event
         private void Clear_Serial1_Click(object sender, RoutedEventArgs e)
         {
@@ -382,28 +135,35 @@ namespace COM_DEBUGGER
             
             if (menu.Header.ToString() == "Clear Left")
             {
-                Paragraph paraa = new Paragraph();
-                textbox1.Document.Blocks.Clear();
-                textbox1.Document.Blocks.Add(paraa);
+                SP1.ClearDisplay();
             }
             else
             {
-                Paragraph parab = new Paragraph();
-                textbox2.Document.Blocks.Clear();
-                textbox2.Document.Blocks.Add(parab);
+                SP2.ClearDisplay();
             }
         }
 
 
         private void Clear_All_Click(object sender, RoutedEventArgs e)
         {
-            Paragraph paraa = new Paragraph();
-            Paragraph parab = new Paragraph();
-            textbox1.Document.Blocks.Clear();
-            textbox1.Document.Blocks.Add(paraa);
+            SP1.ClearDisplay();
+            SP2.ClearDisplay();
+        }
 
-            textbox2.Document.Blocks.Clear();
-            textbox2.Document.Blocks.Add(parab);
+        
+        private void SendBreak_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = (MenuItem)sender;
+
+            if (menu.Name.Contains("2"))
+            {
+                SP2.SendBreak();
+            }
+            else
+            {
+                SP1.SendBreak();
+            }
+           
         }
         #endregion
 
@@ -423,79 +183,90 @@ namespace COM_DEBUGGER
             }
         }
 
-        private void ADDButton_Click(object sender, RoutedEventArgs e)
-        {
-            ADDButton.Focusable = false;
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = true;
-            //dialog.Filter = "Python(*.py)|*.py|YML(*.yml)|*.yml|All files (*.*)|*.*";
-            if (dialog.ShowDialog() == true)
-            {
-                foreach(string p in dialog.FileNames)
-                {
-                    ScriptsSource.Add(new FileItem(p));
-                }
-            }
-        }
+        //private void ADDButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ADDButton.Focusable = false;
+        //    OpenFileDialog dialog = new OpenFileDialog();
+        //    dialog.Multiselect = true;
+        //    //dialog.Filter = "Python(*.py)|*.py|YML(*.yml)|*.yml|All files (*.*)|*.*";
+        //    if (dialog.ShowDialog() == true)
+        //    {
+        //        foreach(string p in dialog.FileNames)
+        //        {
+        //            ScriptsSource.Add(new FileItem(p));
+        //        }
+        //    }
+        //}
 
-        private void AddFolder_Click(object sender, RoutedEventArgs e)
-        {
-            AddFolder.Focusable = false;
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            fbd.ShowDialog();
-            if (fbd.SelectedPath != string.Empty)
-            {
-                ScriptsSource.Add(new FileItem(fbd.SelectedPath));
-            }
-        }
+        //private void AddFolder_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AddFolder.Focusable = false;
+        //    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+        //    fbd.ShowDialog();
+        //    if (fbd.SelectedPath != string.Empty)
+        //    {
+        //        ScriptsSource.Add(new FileItem(fbd.SelectedPath));
+        //    }
+        //}
 
 
-        private void RUNButton_Click(object sender, RoutedEventArgs e)
-        {
-            RUNButton.Focusable = false;
-            if (ScriptsList.SelectedItem != null)
-            {
-                Scripts_run();
-            }
-            else
-            {
-                MessageBox.Show("No file is selected");
-            }
-        }
+        //private void RUNButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    RUNButton.Focusable = false;
+        //    if (ScriptsList.SelectedItem != null)
+        //    {
+        //        Scripts_run();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("No file is selected");
+        //    }
+        //}
 
-        private void ViewButton_Click(object sender, RoutedEventArgs e)
-        {
-            ViewButton.Focusable = false;
-            if (ScriptsList.SelectedIndex == -1)
-            {
-                MessageBox.Show("No file is selected!");
-                return;
-            }
-            string EditorPath = string.Empty;
-            string filepath = (string)ScriptsList.SelectedValue;
-            string EnableFlag = IniOperations.Read("editor", "enable", "config/conf.ini");
-            if (EnableFlag == "1")
-            {
-                EditorPath = IniOperations.Read("editor", "path", "config/conf.ini");
-                if ((Path.GetExtension(EditorPath)==".exe")&&(File.Exists(EditorPath)))
-                {
-                    Process GProcess = new Process();
-                    GProcess.StartInfo.FileName = EditorPath;
-                    GProcess.StartInfo.Arguments = filepath;
-                    GProcess.StartInfo.UseShellExecute = false;
-                    GProcess.Start();
-                }
-                else
-                {
-                    MessageBox.Show("Editor path is invalid, please config the right value in Options panel!");
-                }
+        //private void ViewButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ViewButton.Focusable = false;
+        //    if (ScriptsList.SelectedIndex == -1)
+        //    {
+        //        MessageBox.Show("No file is selected!");
+        //        return;
+        //    }
+        //    string EditorPath = string.Empty;
+        //    string filepath = (string)ScriptsList.SelectedValue;
+        //    string EnableFlag = IniOperations.Read("editor", "enable", "config/conf.ini");
+        //    if (EnableFlag == "1")
+        //    {
+        //        EditorPath = IniOperations.Read("editor", "path", "config/conf.ini");
+        //        if ((Path.GetExtension(EditorPath)==".exe")&&(File.Exists(EditorPath)))
+        //        {
+        //            Process GProcess = new Process();
+        //            GProcess.StartInfo.FileName = EditorPath;
+        //            GProcess.StartInfo.Arguments = filepath;
+        //            GProcess.StartInfo.UseShellExecute = false;
+        //            GProcess.Start();
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Editor path is invalid, please config the right value in Options panel!");
+        //        }
 
-            }
-            else
-            {
-                LoadTextFile(textbox2, filepath);
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        //LoadTextFile(textbox2, filepath);
+        //    }
+        //}
+
+
+        //private void ScriptsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (this.ScriptsList.SelectedItem != null)
+        //    {
+        //        Scripts_run();
+        //    }
+        //}
+
+
 
         private void LoadTextFile(RichTextBox richTextBox, string filename)
         {
@@ -507,13 +278,8 @@ namespace COM_DEBUGGER
             }
         }
 
-        private void ScriptsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (this.ScriptsList.SelectedItem != null)
-            {
-                Scripts_run();
-            }
-        }
+
+
         private void YamlPaserProcess(string YamlPath)
         {
             Process GProcess = new Process();
@@ -525,433 +291,255 @@ namespace COM_DEBUGGER
             GProcess.WaitForExit();
         }
 
-        private void Scripts_run()
-        {
-            if (!ScriptsRuningState)
-            {
-                if (!sp1.IsOpening || !sp2.IsOpening)
-                {
-                   MessageBoxResult res = MessageBox.Show("Make sure the port you wanted is open!\r\n  Click \"Yes\" to continue", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                   if (res != MessageBoxResult.Yes)
-                       return;
-                }
 
-                string CurrentPath = (string)ScriptsList.SelectedValue;
-                ScriptsRunQueue.Clear();
-                if ( Directory.Exists(CurrentPath))
-                {
-                    Paragraph paraa = new Paragraph();
-                    textbox1.Document.Blocks.Clear();
-                    textbox1.Document.Blocks.Add(paraa);
+        //private void Scripts_run()
+        //{
+        //    if (!ScriptsRuningState)
+        //    {
+        //        if (!sp1.IsOpening || !sp2.IsOpening)
+        //        {
+        //           MessageBoxResult res = MessageBox.Show("Make sure the port you wanted is open!\r\n  Click \"Yes\" to continue", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        //           if (res != MessageBoxResult.Yes)
+        //               return;
+        //        }
 
-                    Paragraph parab = new Paragraph();
-                    textbox2.Document.Blocks.Clear();
-                    textbox2.Document.Blocks.Add(parab);
+        //        string CurrentPath = (string)ScriptsList.SelectedValue;
+        //        ScriptsRunQueue.Clear();
+        //        if ( Directory.Exists(CurrentPath))
+        //        {
+        //            //Paragraph paraa = new Paragraph();
+        //            //textbox1.Document.Blocks.Clear();
+        //            //textbox1.Document.Blocks.Add(paraa);
 
-                    string infopath = CurrentPath + "/info.yml";
-                    if (File.Exists(infopath))
-                    {
-                        YamlPaserProcess(infopath);
-                        TextMatchState = true;
+        //            //Paragraph parab = new Paragraph();
+        //            //textbox2.Document.Blocks.Clear();
+        //            //textbox2.Document.Blocks.Add(parab);
 
-                        string assistant_init = IniOperations.Read("others", "assistant_init", IniPath);
-                        if (assistant_init == "1")
-                        {
-                            string assistant_init_path = CurrentPath + "/assistant_init.py";
-                            if (File.Exists(assistant_init_path))
-                            {
-                                ScriptsRunQueue.Add(assistant_init_path);
-                            }
-                        }
-                        string interact_path = CurrentPath + "/interact.py";
-                        if (File.Exists(interact_path))
-                        {
-                            ScriptsRunQueue.Add(interact_path);
-                        }
-                    }
-                }
-                else if (Path.GetExtension(CurrentPath)==".yml")
-                {
-                    YamlPaserProcess(CurrentPath);
-                    TextMatch();
-                    return;
-                }
-                else
-                {
-                    ScriptsRunQueue.Add(CurrentPath);
+        //            string infopath = CurrentPath + "/info.yml";
+        //            if (File.Exists(infopath))
+        //            {
+        //                YamlPaserProcess(infopath);
+        //                TextMatchState = true;
+
+        //                string assistant_init = IniOperations.Read("others", "assistant_init", IniPath);
+        //                if (assistant_init == "1")
+        //                {
+        //                    string assistant_init_path = CurrentPath + "/assistant_init.py";
+        //                    if (File.Exists(assistant_init_path))
+        //                    {
+        //                        ScriptsRunQueue.Add(assistant_init_path);
+        //                    }
+        //                }
+        //                string interact_path = CurrentPath + "/interact.py";
+        //                if (File.Exists(interact_path))
+        //                {
+        //                    ScriptsRunQueue.Add(interact_path);
+        //                }
+        //            }
+        //        }
+        //        else if (Path.GetExtension(CurrentPath)==".yml")
+        //        {
+        //            //YamlPaserProcess(CurrentPath);
+        //            //TextMatch();
+        //            return;
+        //        }
+        //        else
+        //        {
+        //            ScriptsRunQueue.Add(CurrentPath);
                     
-                }
+        //        }
                 
-                ScriptsThread = new Thread(exectue_py);
-                ScriptsThread.Start();
-                ScriptsList.IsEnabled = false;
-                Op_Button1.IsEnabled = false;
-                Op_Button2.IsEnabled = false;
-                RefreshButton.IsEnabled = false;
-                RUNButton.Content = "STOP";
-                RUNButton.Foreground = colorwhite;
-                RUNButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
-                RUNButton.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
-            }
-            else
-            {
-                ScriptsRuningState = false;
-                ScriptsThread.Abort();
-                EnableToolBoxs();
-            }
-        }
+        //        //ScriptsThread = new Thread(exectue_py);
+        //        //ScriptsThread.Start();
+        //        //ScriptsList.IsEnabled = false;
+        //        //SP1.OpenButton.IsEnabled = false;
+        //        //SP2.OpenButton.IsEnabled = false;
+        //        //RefreshButton.IsEnabled = false;
+        //        //RUNButton.Content = "STOP";
+        //        //RUNButton.Foreground = colorwhite;
+        //        //RUNButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
+        //        //RUNButton.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
+        //    }
+        //    else
+        //    {
+        //        ScriptsRuningState = false;
+        //        ScriptsThread.Abort();
+        //        EnableToolBoxs();
+        //    }
+        //}
 
-        private void EnableToolBoxs()
-        {
-            while (true)
-            {
-                if (MessageBox.Show("Finished!") == MessageBoxResult.OK)
-                    break;
-            }
+        //private void EnableToolBoxs()
+        //{
+        //    while (true)
+        //    {
+        //        if (MessageBox.Show("Finished!") == MessageBoxResult.OK)
+        //            break;
+        //    }
 
-            ScriptsList.IsEnabled = true;
-            Op_Button1.IsEnabled = true;
-            Op_Button2.IsEnabled = true;
-            RefreshButton.IsEnabled = true;
-            RUNButton.Content = "Run";
-            RUNButton.Background = colorwhite;
-            RUNButton.Foreground = colorblack;
-        }
-
-        private void TextMatch()
-        {
-            FlowDocument mcFlowDoc = new FlowDocument();
-            string[] keys = new string[50];
-            string[] values = new string[50];
-            bool r = false;
-            Regex Pattern;
-
-            StringBuilder TextTemp = new StringBuilder();
-            TextRange textRange = new TextRange(textbox1.Document.ContentStart,textbox1.Document.ContentEnd);
-            TextTemp.Append(textRange.Text);
-            textRange = new TextRange(textbox2.Document.ContentStart, textbox2.Document.ContentEnd);
-            TextTemp.Append(textRange.Text);
-
-            Paragraph para = new Paragraph();
-            para.Foreground = new SolidColorBrush(Color.FromArgb(255, 108, 68, 68));
-            var Title = new Run("=====================================\r\n--------- Match Result -------\r\n");
-            para.Inlines.Add(Title);
-            para.Inlines.Add(new Run("Expect Pattern:\r\n"));
-
-            //Get Pattern
-            IniOperations.GetAllKeyValues("pattern", out keys, out values, IniPath);
-
-            foreach (string pa in values)
-            {
-                Pattern = new Regex(pa);
-                r = Pattern.IsMatch(TextTemp.ToString());
-
-                if (r)
-                {
-                    var run = new Run("   " + pa + "   Match\r\n");
-                    run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
-                    para.Inlines.Add(run);
-                }
-                else
-                {
-                    var run = new Run("   " + pa + "   Failed to Match\r\n");
-                    run.Foreground = colorred;
-                    para.Inlines.Add(run);
-                }
-            }
-
-            //Get No Pattern
-            para.Inlines.Add(new Run("Expect No Pattern:\r\n"));
-            IniOperations.GetAllKeyValues("no_pattern", out keys, out values, IniPath);
-
-            foreach (string npa in values)
-            {
-                Pattern = new Regex(npa);
-                r = Pattern.IsMatch(TextTemp.ToString());
-
-                if (r)
-                {
-                    var run = new Run("   " + npa + "   Appear\r\n");
-                    run.Foreground = colorred;
-                    para.Inlines.Add(run);
-                }
-                else
-                {
-                    var run = new Run("   " + npa + "   Not Appear\r\n");
-                    run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
-                    para.Inlines.Add(run);
-                }
-            }
-            textbox2.Document.Blocks.Add(para);
-            TextMatchState = false;
-        }
-
-        private void exectue_py()
-        {
-
-            HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
-            HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
-
-            string PythonPath = IniOperations.Read("python", "python_path", "config/conf.ini");
-            string PythonLibPath1 = IniOperations.Read("python", "python_lib1", "config/conf.ini");
-            string PythonLibPath2 = IniOperations.Read("python", "python_lib2", "config/conf.ini");
-            ScriptEngine engine;
-
-            //init serial state
-            ScriptsRuningState = true;
-
-            //init python environment
-            try
-            {
-                 engine = Python.CreateEngine();
-            }
-            catch
-            {
-                return;
-            }
-            var PythonLibPaths = engine.GetSearchPaths();
-            if (Directory.Exists(PythonPath))
-            {
-                PythonLibPaths.Add(PythonPath+"/Lib/");
-                PythonLibPaths.Add(PythonPath+"/Lib/site-packages/");
-            }
-            if (Directory.Exists(PythonLibPath1))
-            {
-                PythonLibPaths.Add(PythonLibPath1);
-            }
-            if (Directory.Exists(PythonLibPath2))
-            {
-                PythonLibPaths.Add(PythonLibPath2);
-            }
-            engine.SetSearchPaths(PythonLibPaths);
-            ScriptScope scope = engine.CreateScope();
-            scope.SetVariable("SEND1", (Action<string>)sp1.Send_Data);
-            scope.SetVariable("SEND2", (Action<string>)sp2.Send_Data);
-            foreach(string file in ScriptsRunQueue)
-            {
-                scope.SetVariable("ScriptPath", file);
-                ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
-                try
-                {
-                    var result = script.Execute(scope);//run
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message != "Thread was being aborted.")
-                    {
-                        string ErrorMessage = "Error: " + file + "\r\n  " + ex.Message;
-                        MessageBox.Show(ErrorMessage);
-                    }
-                }
-            }
-            //Match regular
-            if (TextMatchState)
-            {
-                Dispatcher.Invoke(DeleTextMatch);
-            }
-
-            //enable tool box
-            Dispatcher.Invoke(DeleEnableToolBox);
-            //recover serail state
-            ScriptsRuningState = false;
+        //    ScriptsList.IsEnabled = true;
+        //    SP1.OpenButton.IsEnabled = true;
+        //    SP2.OpenButton.IsEnabled = true;
+        //    RefreshButton.IsEnabled = true;
+        //    RUNButton.Content = "Run";
+        //    //RUNButton.Background = colorwhite;
+        //    //RUNButton.Foreground = colorblack;
+        //}
 
 
-        }
+        //private void TextMatch()
+        //{
+        //    FlowDocument mcFlowDoc = new FlowDocument();
+        //    string[] keys = new string[50];
+        //    string[] values = new string[50];
+        //    bool r = false;
+        //    Regex Pattern;
+
+        //    StringBuilder TextTemp = new StringBuilder();
+        //    TextRange textRange = new TextRange(textbox1.Document.ContentStart,textbox1.Document.ContentEnd);
+        //    TextTemp.Append(textRange.Text);
+        //    textRange = new TextRange(textbox2.Document.ContentStart, textbox2.Document.ContentEnd);
+        //    TextTemp.Append(textRange.Text);
+
+        //    Paragraph para = new Paragraph();
+        //    para.Foreground = new SolidColorBrush(Color.FromArgb(255, 108, 68, 68));
+        //    var Title = new Run("=====================================\r\n--------- Match Result -------\r\n");
+        //    para.Inlines.Add(Title);
+        //    para.Inlines.Add(new Run("Expect Pattern:\r\n"));
+
+        //    //Get Pattern
+        //    IniOperations.GetAllKeyValues("pattern", out keys, out values, IniPath);
+
+        //    foreach (string pa in values)
+        //    {
+        //        Pattern = new Regex(pa);
+        //        r = Pattern.IsMatch(TextTemp.ToString());
+
+        //        if (r)
+        //        {
+        //            var run = new Run("   " + pa + "   Match\r\n");
+        //            run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
+        //            para.Inlines.Add(run);
+        //        }
+        //        else
+        //        {
+        //            var run = new Run("   " + pa + "   Failed to Match\r\n");
+        //            run.Foreground = colorred;
+        //            para.Inlines.Add(run);
+        //        }
+        //    }
+
+        //    //Get No Pattern
+        //    para.Inlines.Add(new Run("Expect No Pattern:\r\n"));
+        //    IniOperations.GetAllKeyValues("no_pattern", out keys, out values, IniPath);
+
+        //    foreach (string npa in values)
+        //    {
+        //        Pattern = new Regex(npa);
+        //        r = Pattern.IsMatch(TextTemp.ToString());
+
+        //        if (r)
+        //        {
+        //            var run = new Run("   " + npa + "   Appear\r\n");
+        //            run.Foreground = colorred;
+        //            para.Inlines.Add(run);
+        //        }
+        //        else
+        //        {
+        //            var run = new Run("   " + npa + "   Not Appear\r\n");
+        //            run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
+        //            para.Inlines.Add(run);
+        //        }
+        //    }
+        //    textbox2.Document.Blocks.Add(para);
+        //    TextMatchState = false;
+        //}
+
+        //private void exectue_py()
+        //{
+
+        //    HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
+        //    HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
+
+        //    string PythonPath = IniOperations.Read("python", "python_path", "config/conf.ini");
+        //    string PythonLibPath1 = IniOperations.Read("python", "python_lib1", "config/conf.ini");
+        //    string PythonLibPath2 = IniOperations.Read("python", "python_lib2", "config/conf.ini");
+        //    ScriptEngine engine;
+
+        //    //init serial state
+        //    ScriptsRuningState = true;
+
+        //    //init python environment
+        //    try
+        //    {
+        //         engine = Python.CreateEngine();
+        //    }
+        //    catch
+        //    {
+        //        return;
+        //    }
+        //    var PythonLibPaths = engine.GetSearchPaths();
+        //    if (Directory.Exists(PythonPath))
+        //    {
+        //        PythonLibPaths.Add(PythonPath+"/Lib/");
+        //        PythonLibPaths.Add(PythonPath+"/Lib/site-packages/");
+        //    }
+        //    if (Directory.Exists(PythonLibPath1))
+        //    {
+        //        PythonLibPaths.Add(PythonLibPath1);
+        //    }
+        //    if (Directory.Exists(PythonLibPath2))
+        //    {
+        //        PythonLibPaths.Add(PythonLibPath2);
+        //    }
+        //    engine.SetSearchPaths(PythonLibPaths);
+        //    ScriptScope scope = engine.CreateScope();
+        //    scope.SetVariable("SEND1", (Action<string>)sp1.Send_Data);
+        //    scope.SetVariable("SEND2", (Action<string>)sp2.Send_Data);
+        //    foreach(string file in ScriptsRunQueue)
+        //    {
+        //        scope.SetVariable("ScriptPath", file);
+        //        ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
+        //        try
+        //        {
+        //            var result = script.Execute(scope);//run
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            if (ex.Message != "Thread was being aborted.")
+        //            {
+        //                string ErrorMessage = "Error: " + file + "\r\n  " + ex.Message;
+        //                MessageBox.Show(ErrorMessage);
+        //            }
+        //        }
+        //    }
+        //    //Match regular
+        //    if (TextMatchState)
+        //    {
+        //        Dispatcher.Invoke(DeleTextMatch);
+        //    }
+
+        //    //enable tool box
+        //    Dispatcher.Invoke(DeleEnableToolBox);
+        //    //recover serail state
+        //    ScriptsRuningState = false;
+
+
+        //}
         #endregion
 
 
 
-        #region Get Port Configuration
-        private Parity getSerialParity(ComboBox cbox)
-        {
-            int idx = cbox.SelectedIndex;
-
-            switch (idx)
-            {
-                case 0:
-                    return Parity.None;
-                case 1:
-                    return Parity.Odd;
-                case 2:
-                    return Parity.Even;
-                case 3:
-                    return Parity.Mark;
-                case 4:
-                    return Parity.Space;
-                default:
-                    return Parity.None;
-            }
-        }
-
-        private StopBits getSerialStopBits(ComboBox cbox)
-        {
-            int idx = cbox.SelectedIndex;
-
-            switch (idx)
-            {
-                case 0:
-                    return StopBits.One;
-                case 1:
-                    return StopBits.OnePointFive;
-                case 2:
-                    return StopBits.Two;
-                default:
-                    return StopBits.One;
-            }
-        }
-
-        private Handshake getSerialHandshake(ComboBox cbox)
-        {
-            int idx = cbox.SelectedIndex;
-
-            switch (idx)
-            {
-                case 0:
-                    return Handshake.None;
-                case 1:
-                    return Handshake.XOnXOff;
-                case 2:
-                    return Handshake.RequestToSend;
-                case 3:
-                    return Handshake.RequestToSendXOnXOff;
-                default:
-                    return Handshake.None;
-            }
-        }
-
-        private void Close_Serial1()
-        {
-            if (sp1.IsOpening)
-                Op_Button1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        }
-
-        private void Close_Serial2()
-        {
-            if (sp2.IsOpening)
-                Op_Button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        }
-
-        //Ports
-        private void Ports_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox.SelectedItem == null || sp1==null)
-                return;
-            if (cbox==comboBox_Ports1)
-            {
-                PortCfgInfo1.portname = cbox.SelectedItem.ToString();
-                Close_Serial1();
-
-                if (!FirstConfig)
-                {
-                    Op_Button1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                }
-            }
-            else
-            {
-                PortCfgInfo2.portname = cbox.SelectedItem.ToString();
-                Close_Serial2();
-
-                if (!FirstConfig)
-                {
-                    Op_Button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                }
-            }
-        }
-        //BaudRate
-        private void comboBox_BaudRate_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox.SelectedItem == null || sp1 == null)
-                return;
-            if (cbox == comboBox_BaudRate1)
-            {
-                PortCfgInfo1.baudrate = (int)cbox.SelectedItem;
-                Close_Serial1();
-
-                if (!FirstConfig)
-                {
-                    Op_Button1.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
-                }
-            }
-            else
-            {
-                PortCfgInfo2.baudrate = (int)cbox.SelectedItem;
-                Close_Serial2();
-                if (!FirstConfig)
-                {
-                    Op_Button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                }
-                    
-            }
-        }
-        //DataBits
-        private void comboBox_Databits_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox == comboBox_Databits1)
-            {
-                PortCfgInfo1.databits = (int)cbox.SelectedItem;
-            }
-            else
-            {
-                PortCfgInfo2.databits = (int)cbox.SelectedItem;
-            }
-            
-        }
-        //StopBits
-        private void comboBox_StopBits_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox == comboBox_StopBits1)
-            {
-                PortCfgInfo1.stopbits = getSerialStopBits(cbox);
-            }
-            else
-            {
-                PortCfgInfo2.stopbits = getSerialStopBits(cbox);
-            }
-        }
-
-        //Parity
-        private void comboBox_Parity_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox == comboBox_Parity1)
-            {
-                PortCfgInfo1.parity = getSerialParity(cbox);
-            }
-            else
-            {
-                PortCfgInfo2.parity = getSerialParity(cbox);
-            }
-
-        }
-        //HandShake
-        private void comboBox_HandShake_Selected(object sender, RoutedEventArgs e)
-        {
-            ComboBox cbox = (ComboBox)sender;
-            if (cbox == comboBox_HandShake1)
-            {
-                PortCfgInfo1.handshake = getSerialHandshake(cbox);
-            }
-            else
-            {
-                PortCfgInfo2.handshake = getSerialHandshake(cbox);
-            }
-        }
 
 
-        #endregion
 
         private void RefreshButton_Click_1(object sender, RoutedEventArgs e)
         {
-            comboBox_Ports1.IsEnabled = false;
-            comboBox_Ports2.IsEnabled = false;
+            //comboBox_Ports1.IsEnabled = false;
+            //comboBox_Ports2.IsEnabled = false;
             ClosePorts();
-            addPortNames(comboBox_Ports1, comboBox_Ports2);
-            comboBox_Ports1.IsEnabled = true;
-            comboBox_Ports2.IsEnabled = true;
+            addPortNames();
+            //comboBox_Ports1.IsEnabled = true;
+            //comboBox_Ports2.IsEnabled = true;
         }
 
         private void LoadCPLDCommand()
@@ -965,12 +553,14 @@ namespace COM_DEBUGGER
                 if (!string.IsNullOrEmpty(s))
                 {
                     CPLDList.Items.Add(s);
-                    sendbox2.AddItem(s);
+                    SP2.SendBox.AddItem(s);
                 }
                     
             }
             file.Close();
         }
+
+
 
         private void LoadKABSCommand()
         {
@@ -993,13 +583,14 @@ namespace COM_DEBUGGER
                 for (j = 0; j < keys.Length; j++)
                 {
                     node.NextNode.Add(new CMDNode { NodeName = keys[j], ID = 2 });
-                    sendbox2.AddItem(keys[j]);
+                    SP2.SendBox.AddItem(keys[j]);
                 }
 
                 CMDTree.Add(node);
             }
             treeView.ItemsSource = CMDTree;
         }
+
 
 
         private void CommandList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -1009,7 +600,7 @@ namespace COM_DEBUGGER
             if (commandlist.SelectedItem != null)
             {
                 text = (string)commandlist.SelectedItem + "\r\n";
-                sp2.Send_Data(text);
+                SP2.SendData(text);
             }
         }
 
@@ -1036,15 +627,14 @@ namespace COM_DEBUGGER
         {
             CheckBox checkbox = (CheckBox)sender;
             bool state = (bool)(checkbox.IsChecked);
-            if (sp1 == null)
-                return;
+
             if (checkbox==NewLineCheck1)
             {
-                sp1.SendNewLineIsEnabled = state;
+                SP1.SendNewLine = state;
             }
             else
             {
-                sp2.SendNewLineIsEnabled = state;
+                SP2.SendNewLine = state;
             }
         }
 
@@ -1057,7 +647,7 @@ namespace COM_DEBUGGER
                 var tree = sender as TreeView;
                 CMDNode item = tree.SelectedItem as CMDNode;
                 if (item.ID == 2)
-                    sp2.Send_Data(item.NodeName);
+                    SP2.SendData(item.NodeName);
             }
             catch
             { }
@@ -1073,53 +663,54 @@ namespace COM_DEBUGGER
 
 
 
-        private void ScriptsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            string p = (string)ScriptsList.SelectedValue;
-            if (File.Exists(p))
-            {
-                ViewButton.IsEnabled = true;
-                if(Path.GetExtension(p)==".yml")
-                {
-                    RUNButton.Content = "Match";
-                }
-                else
-                {
-                    RUNButton.Content = "Run";
-                }
+        //private void ScriptsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    string p = (string)ScriptsList.SelectedValue;
+        //    if (File.Exists(p))
+        //    {
+        //        ViewButton.IsEnabled = true;
+        //        if(Path.GetExtension(p)==".yml")
+        //        {
+        //            RUNButton.Content = "Match";
+        //        }
+        //        else
+        //        {
+        //            RUNButton.Content = "Run";
+        //        }
                    
-            }
-            else
-            {
-                ViewButton.IsEnabled = false;
-                RUNButton.Content = "Run";
-            }
-                
-        }
+        //    }
+        //    else
+        //    {
+        //        ViewButton.IsEnabled = false;
+        //        RUNButton.Content = "Run";
+        //    }
+        //}
 
         private void CPLD_Check_Click(object sender, RoutedEventArgs e)
         {
             var checkbox = (CheckBox)sender;
             string temp = string.Empty;
 
-            if ((bool)checkbox.IsChecked)
-            {
-                if (sendbox2.Text.StartsWith("$")) return;
+            //if ((bool)checkbox.IsChecked)
+            //{
+            //    if (sendbox2.Text.StartsWith("$")) return;
 
-                temp = "$" + sendbox2.Text;
-                sendbox2.Text = temp;
-                sendbox2.TextBoxObject.Select(sendbox2.Text.Length,0);
-            }
-            else
-            {
-                if (sendbox2.Text.StartsWith("$"))
-                {
-                    temp = sendbox2.Text;
-                    sendbox2.Text = Regex.Replace(temp , @"\$","");
-                    sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
-                }
-            }
+            //    temp = "$" + sendbox2.Text;
+            //    sendbox2.Text = temp;
+            //    sendbox2.TextBoxObject.Select(sendbox2.Text.Length,0);
+            //}
+            //else
+            //{
+            //    if (sendbox2.Text.StartsWith("$"))
+            //    {
+            //        temp = sendbox2.Text;
+            //        sendbox2.Text = Regex.Replace(temp , @"\$","");
+            //        sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
+            //    }
+            //}
         }
+
+
 
         private void Evaluation_Click(object sender, RoutedEventArgs e)
         {
@@ -1132,6 +723,8 @@ namespace COM_DEBUGGER
             string configpath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "config";
             Process.Start("explorer.exe ", configpath);
         }
+
+
     }
 
     public class CMDNode
@@ -1164,12 +757,14 @@ namespace COM_DEBUGGER
         private Window panel;
         private bool SendNewLineState = true;
         int n;
-        byte[] buf;
         private bool SCRIPTRUN = false;
         private bool VirtualOpen = false;
+        private List<byte> receivedBytesQueue;
+
 
         public Serial(Action<string> DisplayData)
         {
+            ReadBufferSize = 1024;
             DisplayHandle = new HanderInterfaceUpdataDelegate(DisplayData);
         }
 
@@ -1197,10 +792,12 @@ namespace COM_DEBUGGER
             get { return this.GetState(); }
         }
 
+
         public bool IsScriptRun
         {
             set { SCRIPTRUN = value; }
         }
+
 
         public void Config(PortConfig portcfg)
         {
@@ -1221,7 +818,9 @@ namespace COM_DEBUGGER
             }
             else
             {
+                VirtualOpen = false;
                 this.Open();
+                start_read();
             }
         }
 
@@ -1242,13 +841,83 @@ namespace COM_DEBUGGER
             if (IsOpen)
             {
                 n = BytesToRead;
-                buf = new byte[n];
+                byte[]  buf = new byte[n];
                 Read(buf, 0, n);
-                string abc =Encoding.Default.GetString(buf);
-                Thread.Sleep(20);
-                panel.Dispatcher.BeginInvoke(DisplayHandle, new string[] { abc });
+                string abc = Encoding.Default.GetString(buf);
+                Thread.Sleep(10);
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DisplayHandle, abc);
+            }
+        }
+        
+
+        public void start_read()
+        {
+            byte[] buffer = new byte[2000];
+            Action kickoffRead = null;
+
+            if (!IsOpen)
+                return;
+
+            kickoffRead = (Action)(() => 
+                this.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+            {
+                if (!IsOpen)
+                    return;
+
+                try
+                {
+                    int count = this.BaseStream.EndRead(ar);
+                    byte[] dst = new byte[count];
+                    Buffer.BlockCopy(buffer, 0, dst, 0, count);
+
+                    //receivedBytesQueue.AddRange(dst);
+                    //ThreadPool.QueueUserWorkItem(handleReceivedBytes);
+
+
+                    Thread.Sleep(20);
+                    RaiseAppSerialDataEvent(dst);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ERROR == > " + e.ToString());
+                }
+                try
+                {
+                    kickoffRead();
+                }
+                catch { }
+                
+            }, null));
+
+
+            kickoffRead();
+
+           
+        }
+
+        private void RaiseAppSerialDataEvent(byte[] Data)
+        {
+            string Result = Encoding.Default.GetString(Data);
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DisplayHandle, Result);
+            //panel.Dispatcher.Invoke(DisplayHandle, Result);
+        }
+
+
+        public void Send_Break()
+        {
+            if (VirtualOpen)
+            {
+                return;
             }
 
+            if (!IsOpen)
+            {
+                MessageBox.Show("Port is not open");
+                return;
+            }
+            BreakState = true;
+            Thread.Sleep(100);
+            BreakState = false;
         }
 
         public void Send_Data(string strSend)
@@ -1259,10 +928,11 @@ namespace COM_DEBUGGER
                 { 
                     strSend += "\r\n";
                 }
+
                 //virtual send
                 if (VirtualOpen)
                 {
-                    panel.Dispatcher.Invoke(DisplayHandle, new string[] { strSend });
+                    Application.Current.Dispatcher.BeginInvoke(DisplayHandle, new string[] { strSend });
                     return;
                 }
                 else
@@ -1285,7 +955,6 @@ namespace COM_DEBUGGER
         private string _DirName;
         public FileItem(string path)
         {
-           
             string[] elements = Regex.Split(path, @"\\");
             int l = elements.Length;
             _FileName = string.Format("{0} - {1}",elements[l - 2], elements[l - 1]);

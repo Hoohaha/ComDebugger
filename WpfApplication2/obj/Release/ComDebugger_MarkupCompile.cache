@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\SourceCode\ComDebugger\WpfApplication2\obj\Release\
+C:\Mycode\ComDebugger\WpfApplication2\obj\Release\
 COM_DEBUGGER
 none
 false
 TRACE
-C:\SourceCode\ComDebugger\WpfApplication2\App.xaml
-7206548884
+C:\Mycode\ComDebugger\WpfApplication2\App.xaml
+8-240551924
 1-404259994
-131314271945
-161644821335
-About.xaml;AutoCompleteTextBox.xaml;Evaluation.xaml;help_window.xaml;MainWindow.xaml;OptionWindow.xaml;UpdateCmd.xaml;
+14621361528
+161147660699
+About.xaml;AutoCompleteTextBox.xaml;Evaluation.xaml;help_window.xaml;MainWindow.xaml;OptionWindow.xaml;PortControl.xaml;UpdateCmd.xaml;
 
 False
 

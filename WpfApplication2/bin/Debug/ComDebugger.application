@@ -14,14 +14,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="ComDebugger.exe.manifest" size="6951">
+    <dependentAssembly dependencyType="install" codebase="ComDebugger.exe.manifest" size="6966">
       <assemblyIdentity name="ComDebugger.exe" version="3.0.0.14" publicKeyToken="0000000000000000" language="en" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>YyofJaDYtsQSKZWFQs7EiUTx0AY=</dsig:DigestValue>
+        <dsig:DigestValue>8ieoL9tcr/0OBM+N30w4Oda/I1M=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

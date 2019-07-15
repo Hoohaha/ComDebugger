@@ -136,7 +136,10 @@ namespace WPFAutoCompleteTextbox
 
         public FontFamily FontFamily
         {
-
+            get
+            {
+                return textBox.FontFamily;
+            }
             set
             {
                 textBox.FontFamily = value;

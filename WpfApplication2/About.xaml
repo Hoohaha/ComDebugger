@@ -1,8 +1,26 @@
 ﻿<Window x:Class="COM_DEBUGGER.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About" Height="200" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="About" Height="300" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="0" Background="#FF3896D4">
-        <TextBlock Margin="10" TextWrapping="Wrap" Background="#FFFFFFFE" Padding="5"><Run/><LineBreak/><Run Text="Com Debugger"/><LineBreak/><Run Text=" (For internal use, Non commercial)"/><LineBreak/><Run/><LineBreak/><Run Text="Version: 3.8"/><LineBreak/><Run/><LineBreak/><Run Text="Copyright (c) 2015, NXP Semiconductor, Inc."/><LineBreak/><Run Text="All rights reserved."/></TextBlock>
+        <TextBlock Margin="10" TextWrapping="Wrap" Background="#FFFFFFFE" Padding="5"><Run/><LineBreak/>
+            <Run Text="Com Debugger" FontWeight="Bold" FontSize="16"/>
+            <LineBreak/>
+            <Run Text=" (For internal use, Non commercial)"/>
+            <LineBreak/>
+                        <LineBreak/>
+            <Run Text="Author: Haley Guo"/>
+            <Run/><LineBreak/>
+            <Run Text="Version: 4.0"/>
+            <LineBreak/>
+            <Run Text="GitHub: "></Run>
+            <Hyperlink NavigateUri="https://github.com/Hoohaha/ComDebugger" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink.Inlines>
+                    <Run Text="https://github.com/Hoohaha/ComDebugger"/>
+               </Hyperlink.Inlines>
+                
+            </Hyperlink>
+
+        </TextBlock>
     </Grid>
 </Window>
