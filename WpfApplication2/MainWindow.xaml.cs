@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Threading;
 using System.IO;
 using System.IO.Ports;
-using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
@@ -26,12 +25,6 @@ namespace COM_DEBUGGER
     {
         private string VirtualPort = "Virtual";
         private PortConfig PortCfgInfo2 = new PortConfig();
-
-        //private Thread ScriptsThread;
-        //private bool ScriptsRuningState = false;
-        //private bool FirstConfig = true;
-        //private bool TextMatchState = false;
-
         private ObservableCollection<FileItem> ScriptsSource;
         private ObservableCollection<CMDNode> CMDTree;
 
@@ -39,7 +32,6 @@ namespace COM_DEBUGGER
 
         private string IniPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "app_info.ini";
         private List<string> ScriptsRunQueue = new List<string>();
-
 
         public MainWindow()
         {
@@ -183,89 +175,7 @@ namespace COM_DEBUGGER
             }
         }
 
-        //private void ADDButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ADDButton.Focusable = false;
-        //    OpenFileDialog dialog = new OpenFileDialog();
-        //    dialog.Multiselect = true;
-        //    //dialog.Filter = "Python(*.py)|*.py|YML(*.yml)|*.yml|All files (*.*)|*.*";
-        //    if (dialog.ShowDialog() == true)
-        //    {
-        //        foreach(string p in dialog.FileNames)
-        //        {
-        //            ScriptsSource.Add(new FileItem(p));
-        //        }
-        //    }
-        //}
-
-        //private void AddFolder_Click(object sender, RoutedEventArgs e)
-        //{
-        //    AddFolder.Focusable = false;
-        //    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-        //    fbd.ShowDialog();
-        //    if (fbd.SelectedPath != string.Empty)
-        //    {
-        //        ScriptsSource.Add(new FileItem(fbd.SelectedPath));
-        //    }
-        //}
-
-
-        //private void RUNButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    RUNButton.Focusable = false;
-        //    if (ScriptsList.SelectedItem != null)
-        //    {
-        //        Scripts_run();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("No file is selected");
-        //    }
-        //}
-
-        //private void ViewButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ViewButton.Focusable = false;
-        //    if (ScriptsList.SelectedIndex == -1)
-        //    {
-        //        MessageBox.Show("No file is selected!");
-        //        return;
-        //    }
-        //    string EditorPath = string.Empty;
-        //    string filepath = (string)ScriptsList.SelectedValue;
-        //    string EnableFlag = IniOperations.Read("editor", "enable", "config/conf.ini");
-        //    if (EnableFlag == "1")
-        //    {
-        //        EditorPath = IniOperations.Read("editor", "path", "config/conf.ini");
-        //        if ((Path.GetExtension(EditorPath)==".exe")&&(File.Exists(EditorPath)))
-        //        {
-        //            Process GProcess = new Process();
-        //            GProcess.StartInfo.FileName = EditorPath;
-        //            GProcess.StartInfo.Arguments = filepath;
-        //            GProcess.StartInfo.UseShellExecute = false;
-        //            GProcess.Start();
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Editor path is invalid, please config the right value in Options panel!");
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        //LoadTextFile(textbox2, filepath);
-        //    }
-        //}
-
-
-        //private void ScriptsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        //{
-        //    if (this.ScriptsList.SelectedItem != null)
-        //    {
-        //        Scripts_run();
-        //    }
-        //}
-
+      
 
 
         private void LoadTextFile(RichTextBox richTextBox, string filename)
@@ -291,240 +201,6 @@ namespace COM_DEBUGGER
             GProcess.WaitForExit();
         }
 
-
-        //private void Scripts_run()
-        //{
-        //    if (!ScriptsRuningState)
-        //    {
-        //        if (!sp1.IsOpening || !sp2.IsOpening)
-        //        {
-        //           MessageBoxResult res = MessageBox.Show("Make sure the port you wanted is open!\r\n  Click \"Yes\" to continue", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-        //           if (res != MessageBoxResult.Yes)
-        //               return;
-        //        }
-
-        //        string CurrentPath = (string)ScriptsList.SelectedValue;
-        //        ScriptsRunQueue.Clear();
-        //        if ( Directory.Exists(CurrentPath))
-        //        {
-        //            //Paragraph paraa = new Paragraph();
-        //            //textbox1.Document.Blocks.Clear();
-        //            //textbox1.Document.Blocks.Add(paraa);
-
-        //            //Paragraph parab = new Paragraph();
-        //            //textbox2.Document.Blocks.Clear();
-        //            //textbox2.Document.Blocks.Add(parab);
-
-        //            string infopath = CurrentPath + "/info.yml";
-        //            if (File.Exists(infopath))
-        //            {
-        //                YamlPaserProcess(infopath);
-        //                TextMatchState = true;
-
-        //                string assistant_init = IniOperations.Read("others", "assistant_init", IniPath);
-        //                if (assistant_init == "1")
-        //                {
-        //                    string assistant_init_path = CurrentPath + "/assistant_init.py";
-        //                    if (File.Exists(assistant_init_path))
-        //                    {
-        //                        ScriptsRunQueue.Add(assistant_init_path);
-        //                    }
-        //                }
-        //                string interact_path = CurrentPath + "/interact.py";
-        //                if (File.Exists(interact_path))
-        //                {
-        //                    ScriptsRunQueue.Add(interact_path);
-        //                }
-        //            }
-        //        }
-        //        else if (Path.GetExtension(CurrentPath)==".yml")
-        //        {
-        //            //YamlPaserProcess(CurrentPath);
-        //            //TextMatch();
-        //            return;
-        //        }
-        //        else
-        //        {
-        //            ScriptsRunQueue.Add(CurrentPath);
-                    
-        //        }
-                
-        //        //ScriptsThread = new Thread(exectue_py);
-        //        //ScriptsThread.Start();
-        //        //ScriptsList.IsEnabled = false;
-        //        //SP1.OpenButton.IsEnabled = false;
-        //        //SP2.OpenButton.IsEnabled = false;
-        //        //RefreshButton.IsEnabled = false;
-        //        //RUNButton.Content = "STOP";
-        //        //RUNButton.Foreground = colorwhite;
-        //        //RUNButton.Background = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
-        //        //RUNButton.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 121, 121));
-        //    }
-        //    else
-        //    {
-        //        ScriptsRuningState = false;
-        //        ScriptsThread.Abort();
-        //        EnableToolBoxs();
-        //    }
-        //}
-
-        //private void EnableToolBoxs()
-        //{
-        //    while (true)
-        //    {
-        //        if (MessageBox.Show("Finished!") == MessageBoxResult.OK)
-        //            break;
-        //    }
-
-        //    ScriptsList.IsEnabled = true;
-        //    SP1.OpenButton.IsEnabled = true;
-        //    SP2.OpenButton.IsEnabled = true;
-        //    RefreshButton.IsEnabled = true;
-        //    RUNButton.Content = "Run";
-        //    //RUNButton.Background = colorwhite;
-        //    //RUNButton.Foreground = colorblack;
-        //}
-
-
-        //private void TextMatch()
-        //{
-        //    FlowDocument mcFlowDoc = new FlowDocument();
-        //    string[] keys = new string[50];
-        //    string[] values = new string[50];
-        //    bool r = false;
-        //    Regex Pattern;
-
-        //    StringBuilder TextTemp = new StringBuilder();
-        //    TextRange textRange = new TextRange(textbox1.Document.ContentStart,textbox1.Document.ContentEnd);
-        //    TextTemp.Append(textRange.Text);
-        //    textRange = new TextRange(textbox2.Document.ContentStart, textbox2.Document.ContentEnd);
-        //    TextTemp.Append(textRange.Text);
-
-        //    Paragraph para = new Paragraph();
-        //    para.Foreground = new SolidColorBrush(Color.FromArgb(255, 108, 68, 68));
-        //    var Title = new Run("=====================================\r\n--------- Match Result -------\r\n");
-        //    para.Inlines.Add(Title);
-        //    para.Inlines.Add(new Run("Expect Pattern:\r\n"));
-
-        //    //Get Pattern
-        //    IniOperations.GetAllKeyValues("pattern", out keys, out values, IniPath);
-
-        //    foreach (string pa in values)
-        //    {
-        //        Pattern = new Regex(pa);
-        //        r = Pattern.IsMatch(TextTemp.ToString());
-
-        //        if (r)
-        //        {
-        //            var run = new Run("   " + pa + "   Match\r\n");
-        //            run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
-        //            para.Inlines.Add(run);
-        //        }
-        //        else
-        //        {
-        //            var run = new Run("   " + pa + "   Failed to Match\r\n");
-        //            run.Foreground = colorred;
-        //            para.Inlines.Add(run);
-        //        }
-        //    }
-
-        //    //Get No Pattern
-        //    para.Inlines.Add(new Run("Expect No Pattern:\r\n"));
-        //    IniOperations.GetAllKeyValues("no_pattern", out keys, out values, IniPath);
-
-        //    foreach (string npa in values)
-        //    {
-        //        Pattern = new Regex(npa);
-        //        r = Pattern.IsMatch(TextTemp.ToString());
-
-        //        if (r)
-        //        {
-        //            var run = new Run("   " + npa + "   Appear\r\n");
-        //            run.Foreground = colorred;
-        //            para.Inlines.Add(run);
-        //        }
-        //        else
-        //        {
-        //            var run = new Run("   " + npa + "   Not Appear\r\n");
-        //            run.Foreground = new SolidColorBrush(Color.FromArgb(255, 102, 217, 239));
-        //            para.Inlines.Add(run);
-        //        }
-        //    }
-        //    textbox2.Document.Blocks.Add(para);
-        //    TextMatchState = false;
-        //}
-
-        //private void exectue_py()
-        //{
-
-        //    HanderInterfaceUpdataDelegate DeleEnableToolBox = new HanderInterfaceUpdataDelegate(EnableToolBoxs);
-        //    HanderInterfaceUpdataDelegate DeleTextMatch = new HanderInterfaceUpdataDelegate(TextMatch);
-
-        //    string PythonPath = IniOperations.Read("python", "python_path", "config/conf.ini");
-        //    string PythonLibPath1 = IniOperations.Read("python", "python_lib1", "config/conf.ini");
-        //    string PythonLibPath2 = IniOperations.Read("python", "python_lib2", "config/conf.ini");
-        //    ScriptEngine engine;
-
-        //    //init serial state
-        //    ScriptsRuningState = true;
-
-        //    //init python environment
-        //    try
-        //    {
-        //         engine = Python.CreateEngine();
-        //    }
-        //    catch
-        //    {
-        //        return;
-        //    }
-        //    var PythonLibPaths = engine.GetSearchPaths();
-        //    if (Directory.Exists(PythonPath))
-        //    {
-        //        PythonLibPaths.Add(PythonPath+"/Lib/");
-        //        PythonLibPaths.Add(PythonPath+"/Lib/site-packages/");
-        //    }
-        //    if (Directory.Exists(PythonLibPath1))
-        //    {
-        //        PythonLibPaths.Add(PythonLibPath1);
-        //    }
-        //    if (Directory.Exists(PythonLibPath2))
-        //    {
-        //        PythonLibPaths.Add(PythonLibPath2);
-        //    }
-        //    engine.SetSearchPaths(PythonLibPaths);
-        //    ScriptScope scope = engine.CreateScope();
-        //    scope.SetVariable("SEND1", (Action<string>)sp1.Send_Data);
-        //    scope.SetVariable("SEND2", (Action<string>)sp2.Send_Data);
-        //    foreach(string file in ScriptsRunQueue)
-        //    {
-        //        scope.SetVariable("ScriptPath", file);
-        //        ScriptSource script = engine.CreateScriptSourceFromFile(@"interface/interface.py");
-        //        try
-        //        {
-        //            var result = script.Execute(scope);//run
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            if (ex.Message != "Thread was being aborted.")
-        //            {
-        //                string ErrorMessage = "Error: " + file + "\r\n  " + ex.Message;
-        //                MessageBox.Show(ErrorMessage);
-        //            }
-        //        }
-        //    }
-        //    //Match regular
-        //    if (TextMatchState)
-        //    {
-        //        Dispatcher.Invoke(DeleTextMatch);
-        //    }
-
-        //    //enable tool box
-        //    Dispatcher.Invoke(DeleEnableToolBox);
-        //    //recover serail state
-        //    ScriptsRuningState = false;
-
-
-        //}
         #endregion
 
 
@@ -534,12 +210,9 @@ namespace COM_DEBUGGER
 
         private void RefreshButton_Click_1(object sender, RoutedEventArgs e)
         {
-            //comboBox_Ports1.IsEnabled = false;
-            //comboBox_Ports2.IsEnabled = false;
+
             ClosePorts();
             addPortNames();
-            //comboBox_Ports1.IsEnabled = true;
-            //comboBox_Ports2.IsEnabled = true;
         }
 
         private void LoadCPLDCommand()
@@ -663,52 +336,7 @@ namespace COM_DEBUGGER
 
 
 
-        //private void ScriptsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    string p = (string)ScriptsList.SelectedValue;
-        //    if (File.Exists(p))
-        //    {
-        //        ViewButton.IsEnabled = true;
-        //        if(Path.GetExtension(p)==".yml")
-        //        {
-        //            RUNButton.Content = "Match";
-        //        }
-        //        else
-        //        {
-        //            RUNButton.Content = "Run";
-        //        }
-                   
-        //    }
-        //    else
-        //    {
-        //        ViewButton.IsEnabled = false;
-        //        RUNButton.Content = "Run";
-        //    }
-        //}
 
-        private void CPLD_Check_Click(object sender, RoutedEventArgs e)
-        {
-            var checkbox = (CheckBox)sender;
-            string temp = string.Empty;
-
-            //if ((bool)checkbox.IsChecked)
-            //{
-            //    if (sendbox2.Text.StartsWith("$")) return;
-
-            //    temp = "$" + sendbox2.Text;
-            //    sendbox2.Text = temp;
-            //    sendbox2.TextBoxObject.Select(sendbox2.Text.Length,0);
-            //}
-            //else
-            //{
-            //    if (sendbox2.Text.StartsWith("$"))
-            //    {
-            //        temp = sendbox2.Text;
-            //        sendbox2.Text = Regex.Replace(temp , @"\$","");
-            //        sendbox2.TextBoxObject.Select(sendbox2.Text.Length, 0);
-            //    }
-            //}
-        }
 
 
 

@@ -86,8 +86,6 @@ C:\Mycode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe.manifest
 C:\Mycode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.application
 C:\Mycode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.exe
 C:\Mycode\ComDebugger\WpfApplication2\bin\Release\ComDebugger.pdb
-C:\Mycode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Dynamic.dll
-C:\Mycode\ComDebugger\WpfApplication2\bin\Release\Microsoft.Scripting.Metadata.dll
 C:\Mycode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.exe.manifest
 C:\Mycode\ComDebugger\WpfApplication2\obj\Release\ComDebugger.application
 C:\Mycode\ComDebugger\WpfApplication2\obj\Release\PortControl.g.cs

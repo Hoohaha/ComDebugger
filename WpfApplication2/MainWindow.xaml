@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local2="clr-namespace:WPFAutoCompleteTextbox"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" mc:Ignorable="d" x:Class="COM_DEBUGGER.MainWindow"
-        Title="ComDebugger V4.0" Margin="1,0,0,0" MinWidth="650" MinHeight="650" Width="1100" Height="750" WindowStartupLocation="CenterScreen" Icon="logo.ico" Visibility="Visible">
+        Title="COM Debugger V4.0" Margin="1,0,0,0" MinWidth="650" MinHeight="650" Width="1100" Height="750" WindowStartupLocation="CenterScreen" Icon="logo.ico" Visibility="Visible">
     <Window.Resources>
         <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
@@ -286,18 +286,18 @@
         </Grid.RowDefinitions>
         <ToolBarPanel x:Name="MenuBar" Background="#FF3E3E42" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="3">
             <Menu HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" Foreground="White" VerticalAlignment="Center" Padding="0" Margin="10,0,0,0" Width="396" HorizontalAlignment="Left">
-                <MenuItem Header="File(F)" Background="{x:Null}" Foreground="White" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Width="50">
+                <MenuItem Header="File" Background="{x:Null}" Foreground="White" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" Width="30">
+                    <MenuItem Background="#FF2D2D30" Header="Open Command Files Location" Click="UpdateCommands_Click"/>
                     <MenuItem Header="Exit" Background="#FF2D2D30" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Exit_Click"/>
                 </MenuItem>
-                <MenuItem Header="Settings(S)" Foreground="White" Padding="3,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">
+                <!--<MenuItem Header="Settings(S)" Foreground="White" Padding="3,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">
                     <MenuItem Background="#FF2D2D30" Header="Options" Click="Options_Click"/>
-                    <MenuItem Background="#FF2D2D30" Header="Open Command Files Location" Click="UpdateCommands_Click"/>
-                </MenuItem>
+                </MenuItem>-->
                 <!--<MenuItem Header="Help(H)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">
                     <MenuItem Header="View Help"  Background="#FF2D2D30" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Help_Click"/>
                     <MenuItem Header="Software Evaluation" Background="#FF2D2D30" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Evaluation_Click"/>
                 </MenuItem>-->
-                <MenuItem Header="About(A)" Click="About_Click" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                <MenuItem Header="About" Click="About_Click" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
             </Menu>
         </ToolBarPanel>
         <ToolBarPanel x:Name="ToolBar2" Margin="0" Grid.Row="1" Grid.Column="1">
@@ -313,7 +313,6 @@
             <Menu x:Name="menu1" Background="#FF3E3E42" Foreground="White" BorderBrush="#FFD8D8D8" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Left">
                 <MenuItem x:Name="ClearLMenu" Header="Clear Left" Click="Clear_Serial1_Click"/>
                 <MenuItem x:Name="ClearAllMenu1" Header="Clear All" Click="Clear_All_Click"/>
-                
                 <CheckBox x:Name="NewLineCheck1" Content="End '\r\n'" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Foreground="White" Click="SendNewLineChecked" Background="White" BorderBrush="#FF3F3F46" Padding="0" IsChecked="True"/>
                 <MenuItem x:Name="SendBreakMenu" Header="Send Break" Click="SendBreak_Click"/>
             </Menu>

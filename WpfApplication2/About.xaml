@@ -4,9 +4,9 @@
         Title="About" Height="300" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="0" Background="#FF3896D4">
         <TextBlock Margin="10" TextWrapping="Wrap" Background="#FFFFFFFE" Padding="5"><Run/><LineBreak/>
-            <Run Text="Com Debugger" FontWeight="Bold" FontSize="16"/>
+            <Run Text="COM Debugger" FontWeight="Bold" FontSize="20" FontFamily="Yu Gothic UI Semibold"/>
             <LineBreak/>
-            <Run Text=" (For internal use, Non commercial)"/>
+            <Run Text=" (Internal use only, Non commercial)"/>
             <LineBreak/>
                         <LineBreak/>
             <Run Text="Author: Haley Guo"/>
