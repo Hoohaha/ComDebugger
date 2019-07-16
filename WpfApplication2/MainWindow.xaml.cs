@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Threading;
 using System.IO;
 using System.IO.Ports;
-using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -162,44 +161,44 @@ namespace COM_DEBUGGER
 
 
         #region Python Script Operation
-        private void ListBox_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
-            {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+        //private void ListBox_Drop(object sender, DragEventArgs e)
+        //{
+        //    if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+        //    {
+        //        string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                foreach (string p in files)
-                {
-                    ScriptsSource.Add(new FileItem(p));
-                }
-            }
-        }
+        //        foreach (string p in files)
+        //        {
+        //            ScriptsSource.Add(new FileItem(p));
+        //        }
+        //    }
+        //}
 
       
 
 
-        private void LoadTextFile(RichTextBox richTextBox, string filename)
-        {
-            richTextBox.Document.Blocks.Clear();
-            using (StreamReader streamReader = File.OpenText(filename))
-            {
-                Paragraph paragraph = new Paragraph(new Run(streamReader.ReadToEnd()));
-                richTextBox.Document.Blocks.Add(paragraph);
-            }
-        }
+        //private void LoadTextFile(RichTextBox richTextBox, string filename)
+        //{
+        //    richTextBox.Document.Blocks.Clear();
+        //    using (StreamReader streamReader = File.OpenText(filename))
+        //    {
+        //        Paragraph paragraph = new Paragraph(new Run(streamReader.ReadToEnd()));
+        //        richTextBox.Document.Blocks.Add(paragraph);
+        //    }
+        //}
 
 
 
-        private void YamlPaserProcess(string YamlPath)
-        {
-            Process GProcess = new Process();
-            GProcess.StartInfo.FileName = @"python ";
-            GProcess.StartInfo.Arguments = @"interface/YamlPaser.py " + YamlPath;
-            GProcess.StartInfo.UseShellExecute = false;
-            GProcess.StartInfo.CreateNoWindow = true;
-            GProcess.Start();
-            GProcess.WaitForExit();
-        }
+        //private void YamlPaserProcess(string YamlPath)
+        //{
+        //    Process GProcess = new Process();
+        //    GProcess.StartInfo.FileName = @"python ";
+        //    GProcess.StartInfo.Arguments = @"interface/YamlPaser.py " + YamlPath;
+        //    GProcess.StartInfo.UseShellExecute = false;
+        //    GProcess.StartInfo.CreateNoWindow = true;
+        //    GProcess.Start();
+        //    GProcess.WaitForExit();
+        //}
 
         #endregion
 

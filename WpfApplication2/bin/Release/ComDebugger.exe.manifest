@@ -43,38 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="270848">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ComDebugger.exe" size="270336">
       <assemblyIdentity name="ComDebugger" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>r0NF32uRL89LQRuxAHMD6hHsi2g=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Scripting.dll" size="143872">
-      <assemblyIdentity name="Microsoft.Scripting" version="1.1.0.20" publicKeyToken="7F709C5B713576E1" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ZiZ2bSlL+HVmv4Qt2ntqMTFxG4g=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Yaml.dll" size="45056">
-      <assemblyIdentity name="Yaml" version="1.0.2350.27959" publicKeyToken="0788FE92405BB6FA" language="neutral" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>tR2n2Xt6t+ots4wkC6kMJeouaV4=</dsig:DigestValue>
+        <dsig:DigestValue>n1f4ezjf5zuvBaLq2ZzgjNsJ2YY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
