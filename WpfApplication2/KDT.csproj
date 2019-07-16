@@ -114,10 +114,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Evaluation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="help_window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,9 +132,6 @@
     <Compile Include="AutoCompleteEntry.cs" />
     <Compile Include="AutoCompleteTextBox.xaml.cs">
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Evaluation.xaml.cs">
-      <DependentUpon>Evaluation.xaml</DependentUpon>
     </Compile>
     <Compile Include="help_window.xaml.cs">
       <DependentUpon>help_window.xaml</DependentUpon>

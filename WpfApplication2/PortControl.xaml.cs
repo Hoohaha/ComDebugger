@@ -238,12 +238,13 @@ namespace COM_DEBUGGER
             if (serialport.IsOpening)
             {
                 //sp.ReceivedBytesThreshold = 4096;
-                serialport.DataReceived -= new SerialDataReceivedEventHandler(serialport.Data_Received);
+                //serialport.DataReceived -= new SerialDataReceivedEventHandler(serialport.Data_Received);
                 serialport.Closes();
                 SetOpbuttonOpenState(button);
             }
             else
             {
+                
                 if (portconfig.portname == null)
                 {
                     MessageBox.Show("Please set Port!");
@@ -254,7 +255,7 @@ namespace COM_DEBUGGER
                     MessageBox.Show("Please set BaudRate!");
                     return;
                 }
-
+                FirstConfig = false;
                 serialport.Config(portconfig);//config portname baudrate etc...
                 serialport.ReceivedBytesThreshold = 1024;
                 serialport.ReadTimeout = 300;
@@ -377,8 +378,8 @@ namespace COM_DEBUGGER
 
             portconfig.portname = cbox.SelectedItem.ToString();
             Close_Port();
-            Open_Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
+            Open_Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
         //BaudRate
@@ -390,12 +391,10 @@ namespace COM_DEBUGGER
 
             portconfig.baudrate = (int)cbox.SelectedItem;
             Close_Port();
-
             if (!FirstConfig)
             {
-                Open_Button.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                Open_Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
-
         }
 
 
@@ -406,8 +405,8 @@ namespace COM_DEBUGGER
             if (cbox.SelectedItem == null || serialport == null)
                 return;
 
-
             portconfig.databits = (int)cbox.SelectedItem;
+            Close_Port();
         }
 
 
@@ -419,6 +418,7 @@ namespace COM_DEBUGGER
                 return;
 
             portconfig.stopbits = getSerialStopBits(cbox);
+            Close_Port();
 
         }
 
@@ -430,6 +430,7 @@ namespace COM_DEBUGGER
                 return;
 
             portconfig.parity = getSerialParity(cbox);
+            Close_Port();
 
         }
 
@@ -443,6 +444,7 @@ namespace COM_DEBUGGER
 
 
             portconfig.handshake = getSerialHandshake(cbox);
+            Close_Port();
 
         }
         #endregion

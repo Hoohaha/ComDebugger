@@ -349,17 +349,6 @@ namespace COM_DEBUGGER
         }
 
 
-
-
-
-
-
-        private void Evaluation_Click(object sender, RoutedEventArgs e)
-        {
-            Evaluation ew = new Evaluation();
-            ew.ShowDialog();
-        }
-
         private void UpdateCommands_Click(object sender, RoutedEventArgs e)
         {
             string configpath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "config";
@@ -521,7 +510,7 @@ namespace COM_DEBUGGER
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("ERROR == > " + e.ToString());
+                    //MessageBox.Show("ERROR == > " + e.ToString());
                 }
                 try
                 {
@@ -540,7 +529,7 @@ namespace COM_DEBUGGER
         private void RaiseAppSerialDataEvent(byte[] Data)
         {
             string Result = Encoding.Default.GetString(Data);
-            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, DisplayHandle, Result);
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.DataBind, DisplayHandle, Result);
             //panel.Dispatcher.Invoke(DisplayHandle, Result);
         }
 
